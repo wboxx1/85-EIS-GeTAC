@@ -3,26 +3,51 @@ Imports System.Environment
 Imports SharpKml.Dom
 Imports SharpKml.Base
 Imports SharpKml.Engine
+Imports GeTAC.FormValues
+Imports GeTAC.GeTAC_Controller
 
 
 Public Class formGeTAC
-
+    Private mFormValues As FormValues
+    Private mFormValuesFileName As String
     Public Sub New()
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+       
+        'Set up look and feel of window
         ApplicationLookAndFeel.UseTheme(Me)
-        'runTest()
-        'Dim GE As EARTHLib.ApplicationGE
 
-        'GE = New ApplicationGE()
+        'Instanciate all local variables
+        LocalVariableInstanciate()
+        
+        'Import form values
+        ImportFormValues()
 
-        'GE.SetCameraParams(49.42164, 7.60656, 5000.0, AltitudeModeGE.RelativeToGroundAltitudeGE, 1000, 45.0, 180.0, 5.0)
+        'Populate Values to form
+        PopulatFormValues()
+
+        'Calculate Cache Size
+
+        'Calculate Points and Time Required
 
 
+    End Sub
 
+    Private Sub LocalVariableInstanciate()
+        mFormValues = New FormValues()
+        mFormValuesFileName = New String("")
+    End Sub
+
+    Private Sub ImportFormValues()
+        mFormValuesFileName = GeTAC_Controller.GetFormValuesFileName()
+        mFormValues = GeTAC_Controller.DeserializeFormValuesXML(mFormValuesFileName)
+    End Sub
+
+    Private Sub PopulatFormValues()
+        GeTAC_Controller.FillMainForm(Me, mFormValues)
     End Sub
     Sub runTest()
         Dim cmd, DefM As String
@@ -253,5 +278,74 @@ Public Class formGeTAC
 
     Private Sub trkBarHeading_Scroll(sender As Object, e As EventArgs) Handles trkBarHeading.Scroll
         Me.lblHeading.Text = trkBarHeading.Value & " Deg"
+    End Sub
+
+    Private Sub formGeTAC_FormClosing(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        GeTAC_Controller.SerializeFormValuesXML(mFormValuesFileName, mFormValues)
+        'Dim serializer As Xml.Serialization.XmlSerializer = New Xml.Serialization.XmlSerializer(GetType(FormValues))
+        'Dim writer As StreamWriter = New StreamWriter(GeTAC_Controller.GetFormValuesFileName)
+        'serializer.Serialize(writer, mFormValues)
+    End Sub
+
+    Private Sub upDwn_ValueChanged(sender As Object, e As EventArgs) Handles upDwnDegLat.ValueChanged, upDwnDegLatScanArea.ValueChanged, _
+                                                                                   upDwnDegLon.ValueChanged, upDwnDegLonScanArea.ValueChanged, _
+                                                                                   upDwnMinLat.ValueChanged, upDwnMinLatScanArea.ValueChanged, _
+                                                                                   upDwnMinLon.ValueChanged, upDwnMinLonScanArea.ValueChanged
+
+        If sender.Equals(Me.upDwnDegLat) Then mFormValues.StartPointLatDegree = upDwnDegLat.Value
+        If sender.Equals(Me.upDwnDegLatScanArea) Then mFormValues.ScanAreaLatDegree = upDwnDegLatScanArea.Value
+        If sender.Equals(Me.upDwnDegLon) Then mFormValues.StartPointLonDegree = upDwnDegLon.Value
+        If sender.Equals(Me.upDwnDegLonScanArea) Then mFormValues.ScanAreaLonDegree = upDwnDegLonScanArea.Value
+        If sender.Equals(Me.upDwnMinLat) Then mFormValues.StartPointLatMinute = upDwnMinLat.Value
+        If sender.Equals(Me.upDwnMinLatScanArea) Then mFormValues.ScanAreaLatMinute = upDwnMinLatScanArea.Value
+        If sender.Equals(Me.upDwnMinLon) Then mFormValues.StartPointLonMinute = upDwnMinLon.Value
+        If sender.Equals(Me.upDwnMinLonScanArea) Then mFormValues.ScanAreaLonMinute = upDwnMinLonScanArea.Value
+    End Sub
+
+    Private Sub trkBar_ValueChanged(sender As Object, e As EventArgs) Handles trkBarStep.ValueChanged, trkBarDwell.ValueChanged, _
+                                                                                  trkBarHeading.ValueChanged, trkBarRange.ValueChanged, _
+                                                                                  trkBarTilt.ValueChanged
+        If mFormValues IsNot Nothing Then
+            If sender.Equals(Me.trkBarStep) Then mFormValues.ScanStep = trkBarStep.Value
+            If sender.Equals(Me.trkBarDwell) Then mFormValues.Dwell = trkBarDwell.Value
+            If sender.Equals(Me.trkBarHeading) Then mFormValues.Heading = trkBarHeading.Value
+            If sender.Equals(Me.trkBarRange) Then mFormValues.Range = trkBarRange.Value
+            If sender.Equals(Me.trkBarTilt) Then mFormValues.Tilt = trkBarTilt.Value
+        End If
+    End Sub
+
+    Private Sub txtBxLabel_TextChanged(sender As Object, e As EventArgs) Handles txtBxLabelLat.TextChanged, txtBxLabelLon.TextChanged, _
+                                                                                    txtBoxLabelLatScanArea.TextChanged, txtBoxLabelLonScanArea.TextChanged
+        If mFormValues IsNot Nothing Then
+            If sender.Equals(Me.txtBxLabelLat) Then
+                Select Case txtBxLabelLat.Text
+                    Case "N"
+                        mFormValues.StartPointLatDirection = LATDirection.N
+                    Case "S"
+                        mFormValues.StartPointLatDirection = LATDirection.N
+                End Select
+            ElseIf sender.Equals(Me.txtBxLabelLon) Then
+                Select Case txtBxLabelLon.Text
+                    Case "E"
+                        mFormValues.StartPointLonDirection = LONDirection.E
+                    Case "W"
+                        mFormValues.StartPointLonDirection = LONDirection.W
+                End Select
+            ElseIf sender.Equals(Me.txtBoxLabelLonScanArea) Then
+                Select Case txtBoxLabelLonScanArea.Text
+                    Case "E"
+                        mFormValues.ScanAreaLonDirection = LONDirection.E
+                    Case "W"
+                        mFormValues.ScanAreaLonDirection = LONDirection.W
+                End Select
+            ElseIf sender.Equals(Me.txtBoxLabelLatScanArea) Then
+                Select Case txtBoxLabelLatScanArea.Text
+                    Case "N"
+                        mFormValues.ScanAreaLatDirection = LATDirection.N
+                    Case "S"
+                        mFormValues.ScanAreaLatDirection = LATDirection.S
+                End Select
+            End If
+        End If
     End Sub
 End Class

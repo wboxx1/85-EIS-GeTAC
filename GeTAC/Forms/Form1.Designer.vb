@@ -22,11 +22,14 @@ Partial Class formGeTAC
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formGeTAC))
         Me.btnStart = New System.Windows.Forms.Button()
         Me.grpBxStartPoint = New System.Windows.Forms.GroupBox()
         Me.upDwnMinLon = New System.Windows.Forms.NumericUpDown()
         Me.upDwnMinLat = New System.Windows.Forms.NumericUpDown()
         Me.upDwnDegLon = New System.Windows.Forms.NumericUpDown()
+        Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
+        Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
         Me.upDwnDegLat = New System.Windows.Forms.NumericUpDown()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -36,6 +39,8 @@ Partial Class formGeTAC
         Me.upDwnMinLonScanArea = New System.Windows.Forms.NumericUpDown()
         Me.upDwnMinLatScanArea = New System.Windows.Forms.NumericUpDown()
         Me.upDwnDegLonScanArea = New System.Windows.Forms.NumericUpDown()
+        Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
+        Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
         Me.upDwnDegLatScanArea = New System.Windows.Forms.NumericUpDown()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -65,6 +70,7 @@ Partial Class formGeTAC
         Me.trkBarRange = New System.Windows.Forms.TrackBar()
         Me.chkBoxOnTop = New System.Windows.Forms.CheckBox()
         Me.chkBoxAutoRange = New System.Windows.Forms.CheckBox()
+        Me.TextBoxColor1 = New GeTAC.TextBoxColor()
         Me.btnStop = New System.Windows.Forms.Button()
         Me.btnPause = New System.Windows.Forms.Button()
         Me.lblTilt = New System.Windows.Forms.Label()
@@ -75,11 +81,6 @@ Partial Class formGeTAC
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
-        Me.TextBoxColor1 = New GeTAC.TextBoxColor()
-        Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
-        Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
-        Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
-        Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
         Me.grpBxStartPoint.SuspendLayout()
         CType(Me.upDwnMinLon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.upDwnMinLat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -129,6 +130,7 @@ Partial Class formGeTAC
         '
         'upDwnMinLon
         '
+        Me.upDwnMinLon.DecimalPlaces = 3
         Me.upDwnMinLon.Location = New System.Drawing.Point(178, 58)
         Me.upDwnMinLon.Name = "upDwnMinLon"
         Me.upDwnMinLon.Size = New System.Drawing.Size(80, 20)
@@ -136,6 +138,7 @@ Partial Class formGeTAC
         '
         'upDwnMinLat
         '
+        Me.upDwnMinLat.DecimalPlaces = 3
         Me.upDwnMinLat.Location = New System.Drawing.Point(178, 29)
         Me.upDwnMinLat.Name = "upDwnMinLat"
         Me.upDwnMinLat.Size = New System.Drawing.Size(80, 20)
@@ -148,6 +151,34 @@ Partial Class formGeTAC
         Me.upDwnDegLon.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLon.TabIndex = 8
         Me.upDwnDegLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtBxLabelLon
+        '
+        Me.txtBxLabelLon.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBxLabelLon.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBxLabelLon.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBxLabelLon.Location = New System.Drawing.Point(59, 58)
+        Me.txtBxLabelLon.Name = "txtBxLabelLon"
+        Me.txtBxLabelLon.ReadOnly = True
+        Me.txtBxLabelLon.Size = New System.Drawing.Size(25, 20)
+        Me.txtBxLabelLon.TabIndex = 7
+        Me.txtBxLabelLon.TabStop = False
+        Me.txtBxLabelLon.Text = "E"
+        Me.txtBxLabelLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtBxLabelLat
+        '
+        Me.txtBxLabelLat.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBxLabelLat.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBxLabelLat.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBxLabelLat.Location = New System.Drawing.Point(59, 29)
+        Me.txtBxLabelLat.Name = "txtBxLabelLat"
+        Me.txtBxLabelLat.ReadOnly = True
+        Me.txtBxLabelLat.Size = New System.Drawing.Size(25, 20)
+        Me.txtBxLabelLat.TabIndex = 6
+        Me.txtBxLabelLat.TabStop = False
+        Me.txtBxLabelLat.Text = "N"
+        Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'upDwnDegLat
         '
@@ -214,6 +245,7 @@ Partial Class formGeTAC
         '
         'upDwnMinLonScanArea
         '
+        Me.upDwnMinLonScanArea.DecimalPlaces = 3
         Me.upDwnMinLonScanArea.Location = New System.Drawing.Point(181, 57)
         Me.upDwnMinLonScanArea.Name = "upDwnMinLonScanArea"
         Me.upDwnMinLonScanArea.Size = New System.Drawing.Size(80, 20)
@@ -221,6 +253,7 @@ Partial Class formGeTAC
         '
         'upDwnMinLatScanArea
         '
+        Me.upDwnMinLatScanArea.DecimalPlaces = 3
         Me.upDwnMinLatScanArea.Location = New System.Drawing.Point(181, 28)
         Me.upDwnMinLatScanArea.Name = "upDwnMinLatScanArea"
         Me.upDwnMinLatScanArea.Size = New System.Drawing.Size(80, 20)
@@ -233,6 +266,34 @@ Partial Class formGeTAC
         Me.upDwnDegLonScanArea.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLonScanArea.TabIndex = 18
         Me.upDwnDegLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'txtBoxLabelLonScanArea
+        '
+        Me.txtBoxLabelLonScanArea.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBoxLabelLonScanArea.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBoxLabelLonScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBoxLabelLonScanArea.Location = New System.Drawing.Point(62, 57)
+        Me.txtBoxLabelLonScanArea.Name = "txtBoxLabelLonScanArea"
+        Me.txtBoxLabelLonScanArea.ReadOnly = True
+        Me.txtBoxLabelLonScanArea.Size = New System.Drawing.Size(25, 20)
+        Me.txtBoxLabelLonScanArea.TabIndex = 17
+        Me.txtBoxLabelLonScanArea.TabStop = False
+        Me.txtBoxLabelLonScanArea.Text = "E"
+        Me.txtBoxLabelLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtBoxLabelLatScanArea
+        '
+        Me.txtBoxLabelLatScanArea.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBoxLabelLatScanArea.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBoxLabelLatScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBoxLabelLatScanArea.Location = New System.Drawing.Point(62, 28)
+        Me.txtBoxLabelLatScanArea.Name = "txtBoxLabelLatScanArea"
+        Me.txtBoxLabelLatScanArea.ReadOnly = True
+        Me.txtBoxLabelLatScanArea.Size = New System.Drawing.Size(25, 20)
+        Me.txtBoxLabelLatScanArea.TabIndex = 16
+        Me.txtBoxLabelLatScanArea.TabStop = False
+        Me.txtBoxLabelLatScanArea.Text = "S"
+        Me.txtBoxLabelLatScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'upDwnDegLatScanArea
         '
@@ -535,6 +596,16 @@ Partial Class formGeTAC
         Me.chkBoxAutoRange.Text = "Auto Range"
         Me.chkBoxAutoRange.UseVisualStyleBackColor = True
         '
+        'TextBoxColor1
+        '
+        Me.TextBoxColor1.BackColor = System.Drawing.Color.Lime
+        Me.TextBoxColor1.Cursor = System.Windows.Forms.Cursors.Default
+        Me.TextBoxColor1.Location = New System.Drawing.Point(354, 63)
+        Me.TextBoxColor1.Name = "TextBoxColor1"
+        Me.TextBoxColor1.Size = New System.Drawing.Size(184, 20)
+        Me.TextBoxColor1.TabIndex = 25
+        Me.TextBoxColor1.TabStop = False
+        '
         'btnStop
         '
         Me.btnStop.Location = New System.Drawing.Point(488, 89)
@@ -631,72 +702,6 @@ Partial Class formGeTAC
         Me.Label33.TabIndex = 4
         Me.Label33.Text = "Heading"
         '
-        'TextBoxColor1
-        '
-        Me.TextBoxColor1.BackColor = System.Drawing.Color.Lime
-        Me.TextBoxColor1.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBoxColor1.Location = New System.Drawing.Point(354, 63)
-        Me.TextBoxColor1.Name = "TextBoxColor1"
-        Me.TextBoxColor1.Size = New System.Drawing.Size(184, 20)
-        Me.TextBoxColor1.TabIndex = 25
-        Me.TextBoxColor1.TabStop = False
-        '
-        'txtBoxLabelLonScanArea
-        '
-        Me.txtBoxLabelLonScanArea.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBoxLabelLonScanArea.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBoxLabelLonScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBoxLabelLonScanArea.Location = New System.Drawing.Point(62, 57)
-        Me.txtBoxLabelLonScanArea.Name = "txtBoxLabelLonScanArea"
-        Me.txtBoxLabelLonScanArea.ReadOnly = True
-        Me.txtBoxLabelLonScanArea.Size = New System.Drawing.Size(25, 20)
-        Me.txtBoxLabelLonScanArea.TabIndex = 17
-        Me.txtBoxLabelLonScanArea.TabStop = False
-        Me.txtBoxLabelLonScanArea.Text = "E"
-        Me.txtBoxLabelLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'txtBoxLabelLatScanArea
-        '
-        Me.txtBoxLabelLatScanArea.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBoxLabelLatScanArea.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBoxLabelLatScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBoxLabelLatScanArea.Location = New System.Drawing.Point(62, 28)
-        Me.txtBoxLabelLatScanArea.Name = "txtBoxLabelLatScanArea"
-        Me.txtBoxLabelLatScanArea.ReadOnly = True
-        Me.txtBoxLabelLatScanArea.Size = New System.Drawing.Size(25, 20)
-        Me.txtBoxLabelLatScanArea.TabIndex = 16
-        Me.txtBoxLabelLatScanArea.TabStop = False
-        Me.txtBoxLabelLatScanArea.Text = "S"
-        Me.txtBoxLabelLatScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'txtBxLabelLon
-        '
-        Me.txtBxLabelLon.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBxLabelLon.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBxLabelLon.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBxLabelLon.Location = New System.Drawing.Point(59, 58)
-        Me.txtBxLabelLon.Name = "txtBxLabelLon"
-        Me.txtBxLabelLon.ReadOnly = True
-        Me.txtBxLabelLon.Size = New System.Drawing.Size(25, 20)
-        Me.txtBxLabelLon.TabIndex = 7
-        Me.txtBxLabelLon.TabStop = False
-        Me.txtBxLabelLon.Text = "E"
-        Me.txtBxLabelLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'txtBxLabelLat
-        '
-        Me.txtBxLabelLat.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBxLabelLat.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBxLabelLat.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBxLabelLat.Location = New System.Drawing.Point(59, 29)
-        Me.txtBxLabelLat.Name = "txtBxLabelLat"
-        Me.txtBxLabelLat.ReadOnly = True
-        Me.txtBxLabelLat.Size = New System.Drawing.Size(25, 20)
-        Me.txtBxLabelLat.TabIndex = 6
-        Me.txtBxLabelLat.TabStop = False
-        Me.txtBxLabelLat.Text = "N"
-        Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
         'formGeTAC
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -707,6 +712,7 @@ Partial Class formGeTAC
         Me.Controls.Add(Me.grpBoxProgress)
         Me.Controls.Add(Me.grpBxScanArea)
         Me.Controls.Add(Me.grpBxStartPoint)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "formGeTAC"
         Me.Text = "GeTAC: Google Earth Tile Acquisition Cache"
         Me.grpBxStartPoint.ResumeLayout(False)
