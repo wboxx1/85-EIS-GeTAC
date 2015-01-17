@@ -5,199 +5,101 @@ Imports SharpKml.Base
 Imports SharpKml.Engine
 Imports GeTAC.FormValues
 Imports GeTAC.GeTAC_Controller
+Imports System.Runtime.InteropServices
 
 
 Public Class formGeTAC
     Private mFormValues As FormValues
     Private mFormValuesFileName As String
+    Private mGoogleEarthIsInstalled As Boolean
+    Private mCacheSizeBytes As Long
+    Private mCacheSizeMegaBytes As Integer
+    Private mKMLPath As String
+
     Public Sub New()
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-       
+
         'Set up look and feel of window
         ApplicationLookAndFeel.UseTheme(Me)
 
         'Instanciate all local variables
         LocalVariableInstanciate()
-        
+
         'Import form values
         ImportFormValues()
 
         'Populate Values to form
         PopulatFormValues()
 
-        'Calculate Cache Size
+        'Check for on top
+        CheckForOnTop()
 
+        'Check for Google Earth
+        CheckForGoogleEarth()
+
+        'Calculate Cache Size
+        CalculateCache()
+
+        'Create KML
+        CreateKML()
         'Calculate Points and Time Required
 
 
+
     End Sub
 
+    Private Sub CreateKML()
+        BuildKML(Me)
+        OpenKML(mKMLPath)
+    End Sub
+    Private Sub CalculateCache()
+        Dim path = getCacheLocation()
+        mCacheSizeBytes = GetFolderSize(path, True)
+        mCacheSizeMegaBytes = mCacheSizeBytes / 1048576
+        Me.lblCacheSize.Text = mCacheSizeMegaBytes & " MB (" & String.Format("{0:n0}", mCacheSizeBytes) & " bytes)"
+
+    End Sub
+    Private Sub CheckForGoogleEarth()
+        If GoogleEarthIsInstalled() Then
+            mGoogleEarthIsInstalled = True
+        Else
+            mGoogleEarthIsInstalled = False
+            MsgBox("Google Earth Not Installed! Download Google Earth to use GeTAC!", MsgBoxStyle.MsgBoxSetForeground)
+
+        End If
+    End Sub
     Private Sub LocalVariableInstanciate()
         mFormValues = New FormValues()
         mFormValuesFileName = New String("")
+        mGoogleEarthIsInstalled = False
+        mCacheSizeBytes = New Long()
+        mCacheSizeMegaBytes = New Long()
+        mKMLPath = "C:\\Users\Boxx\AppData\Roaming\GeTAC\LinkKML.kml"
     End Sub
 
     Private Sub ImportFormValues()
-        mFormValuesFileName = GeTAC_Controller.GetFormValuesFileName()
-        mFormValues = GeTAC_Controller.DeserializeFormValuesXML(mFormValuesFileName)
+        mFormValuesFileName = GetFormValuesFileName()
+        mFormValues = DeserializeFormValuesXML(mFormValuesFileName)
     End Sub
 
     Private Sub PopulatFormValues()
-        GeTAC_Controller.FillMainForm(Me, mFormValues)
+        FillMainForm(Me, mFormValues)
     End Sub
-    Sub runTest()
-        Dim cmd, DefM As String
-        Dim ClkPointLon, ClkPointLat As Double
 
-        DefM = "TEST"
-        ClkPointLat = 49.42164
-        ClkPointLon = 7.60656
-
-        cmd = "<?xml version=" & Chr(34) & "1.0" & Chr(34) & " encoding=" & Chr(34) & "UTF-8" & Chr(34) & "?>" & vbCrLf
-        cmd &= "<kml xmlns=" & Chr(34) & "http://earth.google.com/kml/2.1" & Chr(34) & ">" & vbCrLf
-        cmd &= "<Placemark>" & vbCrLf
-        cmd &= "<name>Clickpoint</name>" & vbCrLf
-        cmd &= "<description>" & DefM & "</description>" & vbCrLf
-        cmd &= "<Point>" & vbCrLf
-        cmd &= "<coordinates>" & ClkPointLon.ToString & "," & ClkPointLat.ToString & ",2000</coordinates>" & vbCrLf
-        cmd &= "</Point>" & vbCrLf
-        cmd &= "</Placemark>" & vbCrLf
-        cmd &= "</kml>"
-        Dim m_FileName As String = ""
-        Try
-            ' Return the path and name of a newly created Temporary
-            '   file.
-            m_FileName = Path.GetTempFileName()
-            ' Create a FileInfo object to manipulate properties of 
-            '   the created temporary file
-            Dim myFileInfo As New FileInfo(m_FileName)
-            ' Use the FileInfo object to set the Attribute property of this
-            '   file to Temporary.
-            myFileInfo.Attributes = FileAttributes.Temporary
-            myFileInfo.Delete()
-            m_FileName = m_FileName.Replace(myFileInfo.Extension, ".kml")
-        Catch exc As Exception
-            ' Warn the user if there is a problem
-            MessageBox.Show("Unable to create a TEMP file or set its attributes.", "Google Earth Viewer", MessageBoxButtons.OK)
-            Exit Sub
-        End Try
-
-        Dim st As Stream = File.Open(m_FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None)
-        Dim sw As New StreamWriter(st)
-        sw.AutoFlush = True
-        sw.Write(cmd)
-        sw.Close()
-        st.Dispose()
-
-        System.Diagnostics.Process.Start(m_FileName)
+    Private Sub CheckForOnTop()
+        If mFormValues.OnTop = False Then
+            MakeNormal()
+        Else
+            SetTopLevel(True)
+        End If
     End Sub
 
     Sub test2()
-        Dim kml As kml
-        Dim folder As Folder
-        Dim placemark1 As Placemark
-        Dim placemark2 As Placemark
-        Dim placemark3 As Placemark
-        Dim linestring1 As LineString
-        Dim linestring2 As LineString
-        Dim point As Point
-        Dim style1 As Style
-        Dim style2 As Style
-        Dim style3 As Style
-        Dim coordinateCollection1 As CoordinateCollection
-        Dim coordinateCollection2 As CoordinateCollection
-        Dim point1 As Point
-        Dim point2 As Point
-        Dim point3 As Point
-        Dim point4 As Point
 
-        kml = New kml()
-        folder = New Folder()
-        point = New Point()
-        placemark1 = New Placemark()
-        placemark2 = New Placemark()
-        placemark3 = New Placemark()
-        linestring1 = New LineString()
-        linestring2 = New LineString()
-        style1 = New Style()
-        style2 = New Style()
-        style3 = New Style()
-        point1 = New Point()
-        point2 = New Point()
-        point3 = New Point()
-        point4 = New Point()
-
-        coordinateCollection1 = New CoordinateCollection()
-        point1.Coordinate = New Vector(49.69398, 7.312933, 0)
-        point2.Coordinate = New Vector(49.69398, 8.0796, 0)
-        point3.Coordinate = New Vector(49.27732, 8.0796, 0)
-        point4.Coordinate = New Vector(49.27732, 7.312933, 0)
-        coordinateCollection1.Add(point1.Coordinate)
-        coordinateCollection1.Add(point2.Coordinate)
-        coordinateCollection1.Add(point3.Coordinate)
-        coordinateCollection1.Add(point4.Coordinate)
-        coordinateCollection1.Add(point1.Coordinate)
-        linestring1.Coordinates = coordinateCollection1
-        linestring1.altitudeMode = AltitudeMode.ClampToGround
-        linestring1.Tessellate = True
-        style1.Line = New LineStyle
-        style1.Line.Color = New Color32(255, 0, 255, 255)
-        style1.Line.Width = 3
-        placemark1.AddStyle(style1)
-        placemark1.Geometry = linestring1
-
-        coordinateCollection2 = New CoordinateCollection()
-        point1.Coordinate = New Vector(49.68148, 7.900436, 0)
-        point2.Coordinate = New Vector(49.68148, 7.925436, 0)
-        point3.Coordinate = New Vector(49.70649, 7.925436, 0)
-        point4.Coordinate = New Vector(49.70649, 7.900436, 0)
-        coordinateCollection2.Add(point1.Coordinate)
-        coordinateCollection2.Add(point2.Coordinate)
-        coordinateCollection2.Add(point3.Coordinate)
-        coordinateCollection2.Add(point4.Coordinate)
-        coordinateCollection2.Add(point1.Coordinate)
-        linestring2.Coordinates = coordinateCollection2
-        linestring2.altitudeMode = AltitudeMode.ClampToGround
-        linestring2.Tessellate = True
-        style2.Line = New LineStyle
-        style2.Line.Color = New Color32(255, 0, 255, 0)
-        style2.Line.Width = 3
-        placemark2.AddStyle(style2)
-        placemark2.Geometry = linestring2
-
-
-        point.Coordinate = New Vector(49.69398, 7.312933)
-        point.Extrude = True
-        style3.Icon = New IconStyle
-        style3.Icon.Icon = New IconStyle.IconLink(New Uri("http://maps.google.com/mapfiles/kml/shapes/donut.png"))
-        style3.Icon.Scale = 0.75
-        placemark3.Geometry = point
-        placemark3.Visibility = True
-        placemark3.AddStyle(style3)
-
-
-        folder.Name = "MyHarvester"
-        folder.AddFeature(placemark1)
-        folder.AddFeature(placemark2)
-        folder.AddFeature(placemark3)
-
-
-        kml.Feature = folder
-
-        Dim serializer As Serializer
-        serializer = New Serializer()
-        serializer.Serialize(kml)
-
-        Dim appData As String = GetFolderPath(SpecialFolder.ApplicationData)
-        Directory.CreateDirectory(appData & "\GeTAC")
-
-        Dim writer As StreamWriter = New StreamWriter("C:\\Users\Boxx\AppData\Roaming\GeTAC\newKMLTest.kml")
-        writer.Write(serializer.Xml)
-        writer.Close()
 
     End Sub
 
@@ -255,10 +157,11 @@ Public Class formGeTAC
 
     End Sub
 
-    
+
     Private Sub trkBarStep_Scroll(sender As Object, e As EventArgs) Handles trkBarStep.Scroll
         Dim min = CDbl(trkBarStep.Value * 0.5)
         Me.lblStep.Text = min & " Min"
+
     End Sub
 
     Private Sub trkBarDwell_Scroll(sender As Object, e As EventArgs) Handles trkBarDwell.Scroll
@@ -271,7 +174,7 @@ Public Class formGeTAC
         Me.lblRange.Text = km / 1000 & " km"
     End Sub
 
-    
+
     Private Sub trkBarTilt_Scroll(sender As Object, e As EventArgs) Handles trkBarTilt.Scroll
         Me.lblTilt.Text = trkBarTilt.Value & " Deg"
     End Sub
@@ -281,7 +184,10 @@ Public Class formGeTAC
     End Sub
 
     Private Sub formGeTAC_FormClosing(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
-        GeTAC_Controller.SerializeFormValuesXML(mFormValuesFileName, mFormValues)
+        If mGoogleEarthIsInstalled Then
+            SerializeFormValuesXML(mFormValuesFileName, mFormValues)
+        End If
+
         'Dim serializer As Xml.Serialization.XmlSerializer = New Xml.Serialization.XmlSerializer(GetType(FormValues))
         'Dim writer As StreamWriter = New StreamWriter(GeTAC_Controller.GetFormValuesFileName)
         'serializer.Serialize(writer, mFormValues)
@@ -300,6 +206,8 @@ Public Class formGeTAC
         If sender.Equals(Me.upDwnMinLatScanArea) Then mFormValues.ScanAreaLatMinute = upDwnMinLatScanArea.Value
         If sender.Equals(Me.upDwnMinLon) Then mFormValues.StartPointLonMinute = upDwnMinLon.Value
         If sender.Equals(Me.upDwnMinLonScanArea) Then mFormValues.ScanAreaLonMinute = upDwnMinLonScanArea.Value
+
+        CreateKML()
     End Sub
 
     Private Sub trkBar_ValueChanged(sender As Object, e As EventArgs) Handles trkBarStep.ValueChanged, trkBarDwell.ValueChanged, _
@@ -311,7 +219,15 @@ Public Class formGeTAC
             If sender.Equals(Me.trkBarHeading) Then mFormValues.Heading = trkBarHeading.Value
             If sender.Equals(Me.trkBarRange) Then mFormValues.Range = trkBarRange.Value
             If sender.Equals(Me.trkBarTilt) Then mFormValues.Tilt = trkBarTilt.Value
+
         End If
+
+    End Sub
+
+    Private Sub trkBar_MouseUp(sender As Object, e As EventArgs) Handles trkBarStep.MouseUp, trkBarDwell.MouseUp, _
+                                                                                  trkBarHeading.MouseUp, trkBarRange.MouseUp, _
+                                                                                  trkBarTilt.MouseUp
+        If mFormValues IsNot Nothing Then CreateKML()
     End Sub
 
     Private Sub txtBxLabel_TextChanged(sender As Object, e As EventArgs) Handles txtBxLabelLat.TextChanged, txtBxLabelLon.TextChanged, _
@@ -346,6 +262,25 @@ Public Class formGeTAC
                         mFormValues.ScanAreaLatDirection = LATDirection.S
                 End Select
             End If
+            CreateKML()
         End If
     End Sub
+
+    <DllImport("user32.dll", SetLastError:=True)> _
+    Private Shared Function SetWindowPos(ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As Integer) As Boolean
+    End Function
+
+    Private Const SWP_NOSIZE As Integer = &H1
+    Private Const SWP_NOMOVE As Integer = &H2
+
+    Private Shared ReadOnly HWND_TOPMOST As New IntPtr(-1)
+    Private Shared ReadOnly HWND_NOTOPMOST As New IntPtr(-2)
+
+    Public Function MakeTopMost()
+        SetWindowPos(Me.Handle(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE)
+    End Function
+
+    Public Function MakeNormal()
+        SetWindowPos(Me.Handle(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE)
+    End Function
 End Class
