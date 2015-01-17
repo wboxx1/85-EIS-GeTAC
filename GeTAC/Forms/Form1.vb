@@ -94,7 +94,7 @@ Public Class formGeTAC
         If mFormValues.OnTop = False Then
             MakeNormal()
         Else
-            SetTopLevel(True)
+            MakeTopMost()
         End If
     End Sub
 
@@ -266,6 +266,10 @@ Public Class formGeTAC
         End If
     End Sub
 
+    Private Sub chkBoxOnTop_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxOnTop.CheckedChanged
+        If mFormValues IsNot Nothing Then mFormValues.OnTop = chkBoxOnTop.Checked
+        CheckForOnTop()
+    End Sub
     <DllImport("user32.dll", SetLastError:=True)> _
     Private Shared Function SetWindowPos(ByVal hWnd As IntPtr, ByVal hWndInsertAfter As IntPtr, ByVal X As Integer, ByVal Y As Integer, ByVal cx As Integer, ByVal cy As Integer, ByVal uFlags As Integer) As Boolean
     End Function
