@@ -105,7 +105,21 @@ Public Class GeTAC_Controller
         Return lngDirSize
     End Function
 
-    Shared Sub BuildKML(ByVal main As formGeTAC)
+    Shared Sub SaveCache(ByVal CachePath As String, ByVal DestinationPath As String, ByRef main As formGeTAC)
+        Dim objFileInfo As FileInfo
+        Dim objDir As DirectoryInfo = New DirectoryInfo(CachePath)
+
+        main.Cursor = Cursors.WaitCursor
+        For Each objFileInfo In objDir.GetFiles()
+            Try
+                objFileInfo.CopyTo(DestinationPath & "\" & objFileInfo.Name)
+            Catch e As Exception
+            End Try
+        Next
+        main.Cursor = Cursors.Default
+    End Sub
+
+    Shared Sub BuildKML(ByVal formValues As FormValues, Optional latitudeMultiplier As Integer = 0, Optional longitudeMultiplier As Integer = 0)
         Dim kml As Kml
         Dim folder As Folder
         Dim placemark1 As Placemark
@@ -143,18 +157,18 @@ Public Class GeTAC_Controller
         lookAt = New LookAt()
 
         coordinateCollection1 = New CoordinateCollection()
-        point1.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text), 0)
-        point2.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text) + _
-                                       DecimalCoordinate(main.upDwnDegLonScanArea.Value, main.upDwnMinLonScanArea.Value, main.txtBoxLabelLonScanArea.Text), 0)
-        point3.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text) + _
-                                       DecimalCoordinate(main.upDwnDegLatScanArea.Text, main.upDwnMinLatScanArea.Value, main.txtBoxLabelLatScanArea.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text) + _
-                                       DecimalCoordinate(main.upDwnDegLonScanArea.Value, main.upDwnMinLonScanArea.Value, main.txtBoxLabelLonScanArea.Text), 0)
-        point4.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text) + _
-                                       DecimalCoordinate(main.upDwnDegLatScanArea.Text, main.upDwnMinLatScanArea.Value, main.txtBoxLabelLatScanArea.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text), 0)
+        point1.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection), 0)
+        point2.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                       DecimalCoordinate(formValues.ScanAreaLonDegree, formValues.ScanAreaLonMinute, formValues.ScanAreaLonDirection), 0)
+        point3.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                                       DecimalCoordinate(formValues.ScanAreaLatDegree, formValues.ScanAreaLatMinute, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                       DecimalCoordinate(formValues.ScanAreaLonDegree, formValues.ScanAreaLonMinute, formValues.ScanAreaLonDirection), 0)
+        point4.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                                       DecimalCoordinate(formValues.ScanAreaLatDegree, formValues.ScanAreaLatMinute, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection), 0)
         coordinateCollection1.Add(point1.Coordinate)
         coordinateCollection1.Add(point2.Coordinate)
         coordinateCollection1.Add(point3.Coordinate)
@@ -170,14 +184,22 @@ Public Class GeTAC_Controller
         placemark1.Geometry = linestring1
 
         coordinateCollection2 = New CoordinateCollection()
-        point1.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value + main.trkBarStep.Value / 4, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value - main.trkBarStep.Value / 4, main.txtBxLabelLon.Text), 0)
-        point2.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value + main.trkBarStep.Value / 4, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value + main.trkBarStep.Value / 4, main.txtBxLabelLon.Text), 0)
-        point3.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value - main.trkBarStep.Value / 4, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value + main.trkBarStep.Value / 4, main.txtBxLabelLon.Text), 0)
-        point4.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value - main.trkBarStep.Value / 4, main.txtBxLabelLat.Text), _
-                                       DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value - main.trkBarStep.Value / 4, main.txtBxLabelLon.Text), 0)
+        point1.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute + formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                       latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute - formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                       longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+        point2.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute + formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                       latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute + formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                       longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+        point3.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute - formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                       latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute + formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                       longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+        point4.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute - formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                       latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                       DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute - formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                       longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
         coordinateCollection2.Add(point1.Coordinate)
         coordinateCollection2.Add(point2.Coordinate)
         coordinateCollection2.Add(point3.Coordinate)
@@ -193,8 +215,10 @@ Public Class GeTAC_Controller
         placemark2.Geometry = linestring2
 
 
-        point.Coordinate = New Vector(DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text), _
-                                      DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text), 0)
+        point.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                                      latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                      DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                      longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
         point.Extrude = True
         style3.Icon = New IconStyle
         style3.Icon.Icon = New IconStyle.IconLink(New Uri("http://maps.google.com/mapfiles/kml/shapes/donut.png"))
@@ -203,11 +227,13 @@ Public Class GeTAC_Controller
         placemark3.Visibility = True
         placemark3.AddStyle(style3)
 
-        lookAt.Heading = main.trkBarHeading.Value
-        lookAt.Latitude = DecimalCoordinate(main.upDwnDegLat.Value, main.upDwnMinLat.Value, main.txtBxLabelLat.Text)
-        lookAt.Longitude = DecimalCoordinate(main.upDwnDegLon.Value, main.upDwnMinLon.Value, main.txtBxLabelLon.Text)
-        lookAt.Range = LinearToLog.ConvertLinearToLog(main.trkBarRange.Value)
-        lookAt.Tilt = main.trkBarTilt.Value
+        lookAt.Heading = formValues.Heading
+        lookAt.Latitude = DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                          latitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection)
+        lookAt.Longitude = DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                           longitudeMultiplier * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection)
+        lookAt.Range = LinearToLog.ConvertLinearToLog(formValues.Range)
+        lookAt.Tilt = formValues.Tilt
 
 
 
@@ -233,19 +259,71 @@ Public Class GeTAC_Controller
     End Sub
 
     Shared Sub OpenKML(ByVal path As String)
-        Process.Start(path)
+        Dim p As Process = Process.Start(path)
+        p.WaitForInputIdle()
+
     End Sub
-    Shared Function DecimalCoordinate(ByVal degree As Integer, ByVal minute As Double, Optional ByVal direction As String = "N") As Double
-        Dim multiplier As Integer = 1
 
-        Select Case direction
-            Case "S"
-                multiplier = -1
-            Case "W"
-                multiplier = -1
-        End Select
-
+    Shared Function DecimalCoordinate(ByVal degree As Integer, ByVal minute As Double, Optional ByVal direction As LATDirection = FormValues.LATDirection.N) As Double
+        Dim multiplier = If(direction = FormValues.LATDirection.N, 1, -1)
         Return multiplier * (degree + (minute / 60))
+    End Function
+
+    Shared Function DecimalCoordinate(ByVal degree As Integer, ByVal minute As Double, Optional ByVal direction As LONDirection = FormValues.LONDirection.E) As Double
+        Dim multiplier = If(direction = FormValues.LONDirection.E, 1, -1)
+        Return multiplier * (degree + (minute / 60))
+    End Function
+
+    Shared Sub CalculateScan(ByRef main As formGeTAC)
+        Dim lat = (((main.upDwnDegLatScanArea.Value * 60) + (main.upDwnMinLatScanArea.Value)) / (main.trkBarStep.Value / 2))
+        main.LatitudePoints = Math.Floor(lat) + 1
+
+        Dim lon = (((main.upDwnDegLonScanArea.Value * 60) + (main.upDwnMinLonScanArea.Value)) / (main.trkBarStep.Value / 2))
+        main.LongitudePoints = Math.Floor(lon) + 1
+
+        main.PointsWarning = If(main.LatitudePoints * main.LongitudePoints > 600, True, False)
+        main.ScanTooLarge = If(lon < 1 Or lat < 1, True, False)
+    End Sub
+
+    Shared Sub PointsOK(ByRef main As formGeTAC)
+        main.txtBxColorPointsCheck.BackColor = Color.Green
+    End Sub
+
+    Shared Sub PointsOver(ByRef main As formGeTAC)
+        main.txtBxColorPointsCheck.BackColor = Color.Yellow
+    End Sub
+
+    Shared Sub ScanOK(ByRef main As formGeTAC, ByVal totalPoints As Integer)
+        main.lblTotalPoints.Text = "Points " & totalPoints
+        main.txtBxColorPointsCheck.BackColor = Color.Green
+        main.btnStart.Enabled = True
+    End Sub
+
+    Shared Sub ScanOVer(ByRef main As formGeTAC)
+        main.lblTotalPoints.Text = "Points "
+        main.txtBxColorPointsCheck.BackColor = Color.Red
+        main.btnStart.Enabled = False
+    End Sub
+
+    Shared Function CalculateHour(ByVal seconds As Double) As Integer
+        Return Math.Floor(seconds / 3600)
+    End Function
+
+    Shared Function CalculateMinute(ByVal seconds As Double) As Integer
+        Dim Hour = Math.Floor(seconds / 3600)
+        Dim Minute = (seconds / 3600) - Hour
+        Return Math.Floor(Minute * 60)
+    End Function
+
+    Shared Function CalculateSecond(ByVal seconds As Double) As Integer
+        Dim Hour = Math.Floor(seconds / 3600)
+        Dim Minute = (seconds / 3600) - Hour
+        Minute = Minute * 60
+        Dim Sec = Minute - Math.Floor(Minute)
+        Sec = Math.Floor(Sec * 60)
+
+        Return Sec
+
     End Function
 
     Shared latDirection As String() = {"N", "S"}

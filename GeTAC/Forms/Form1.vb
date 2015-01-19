@@ -15,6 +15,21 @@ Public Class formGeTAC
     Private mCacheSizeBytes As Long
     Private mCacheSizeMegaBytes As Integer
     Private mKMLPath As String
+    Private mDwellTime As Double
+    Private mScanHour As Integer
+    Private mScanMinute As Integer
+    Private mScanSecond As Integer
+    Private mCacheLocation As String
+    Private mProgramIsPaused As Boolean
+    Private mIsInitialized As Boolean
+    Private mIsCancelled As Boolean
+    Private mAlarmTime As Date
+
+    Public LatitudePoints As Integer
+    Public LongitudePoints As Integer
+    Public ScanTooLarge As Boolean
+    Public PointsWarning As Boolean
+
 
     Public Sub New()
 
@@ -41,27 +56,65 @@ Public Class formGeTAC
         'Check for Google Earth
         CheckForGoogleEarth()
 
-        'Calculate Cache Size
-        CalculateCache()
+        'Get Cache Location
+        CalculateCacheLocation()
 
         'Create KML
         CreateKML()
-        'Calculate Points and Time Required
 
+        'Calculate Points 
+        CalculatePoints()
 
+        'Set Time Variable
+        SetTimeVariable()
+
+        'Calculate Time
+        CalculateTime()
+
+        'Start Cache reader
+        Me.bckGrndCacheRead.RunWorkerAsync()
+
+        'Signal finished initialization
+        mIsInitialized = True
 
     End Sub
 
-    Private Sub CreateKML()
-        BuildKML(Me)
+    Private Sub CalculateTime()
+        If Not ScanTooLarge Then
+            mScanHour = CalculateHour(mDwellTime * LatitudePoints * LongitudePoints)
+            mScanMinute = CalculateMinute(mDwellTime * LatitudePoints * LongitudePoints)
+            mScanSecond = CalculateSecond(mDwellTime * LatitudePoints * LongitudePoints)
+            Me.lblTimeRequired.Text = mScanHour.ToString("00") & "h " & mScanMinute.ToString("00") & "m " & mScanSecond.ToString("00") & "s"
+        Else
+            Me.lblTimeRequired.Text = "00h 00m 00s"
+        End If
+    End Sub
+    Private Sub SetTimeVariable()
+        mDwellTime = CDbl(Me.trkBarDwell.Value / 10)
+    End Sub
+    Private Sub CalculatePoints()
+        CalculateScan(Me)
+
+        If ScanTooLarge Then
+            ScanOVer(Me)
+        Else
+            ScanOK(Me, LatitudePoints * LongitudePoints)
+            If PointsWarning Then
+                PointsOver(Me)
+            Else
+                PointsOK(Me)
+            End If
+        End If
+
+        
+
+    End Sub
+    Private Sub CreateKML(Optional ByVal latMult As Integer = 0, Optional ByVal lonMult As Integer = 0)
+        BuildKML(mFormValues, latMult, lonMult)
         OpenKML(mKMLPath)
     End Sub
-    Private Sub CalculateCache()
-        Dim path = getCacheLocation()
-        mCacheSizeBytes = GetFolderSize(path, True)
-        mCacheSizeMegaBytes = mCacheSizeBytes / 1048576
-        Me.lblCacheSize.Text = mCacheSizeMegaBytes & " MB (" & String.Format("{0:n0}", mCacheSizeBytes) & " bytes)"
-
+    Private Sub CalculateCacheLocation()
+        mCacheLocation = getCacheLocation()
     End Sub
     Private Sub CheckForGoogleEarth()
         If GoogleEarthIsInstalled() Then
@@ -79,6 +132,14 @@ Public Class formGeTAC
         mCacheSizeBytes = New Long()
         mCacheSizeMegaBytes = New Long()
         mKMLPath = "C:\\Users\Boxx\AppData\Roaming\GeTAC\LinkKML.kml"
+        mDwellTime = 0
+        LatitudePoints = 0
+        LongitudePoints = 0
+        ScanTooLarge = False
+        mProgramIsPaused = False
+        mIsInitialized = False
+        mIsCancelled = False
+        PointsWarning = False
     End Sub
 
     Private Sub ImportFormValues()
@@ -97,17 +158,6 @@ Public Class formGeTAC
             MakeTopMost()
         End If
     End Sub
-
-    Sub test2()
-
-
-    End Sub
-
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnStart.Click
-        test2()
-    End Sub
-
 
     Private Sub txtBxLabelLat_MouseClick(sender As Object, e As MouseEventArgs) Handles txtBxLabelLat.MouseDown
         grpBxScanArea.Focus()
@@ -161,12 +211,16 @@ Public Class formGeTAC
     Private Sub trkBarStep_Scroll(sender As Object, e As EventArgs) Handles trkBarStep.Scroll
         Dim min = CDbl(trkBarStep.Value * 0.5)
         Me.lblStep.Text = min & " Min"
-
+        CalculatePoints()
+        CalculateTime()
     End Sub
 
     Private Sub trkBarDwell_Scroll(sender As Object, e As EventArgs) Handles trkBarDwell.Scroll
         Dim sec = CDbl(trkBarDwell.Value / 10)
+        mDwellTime = sec
         Me.lblDwell.Text = sec & " Sec"
+
+        CalculateTime()
     End Sub
 
     Private Sub trkBarRange_Scroll(sender As Object, e As EventArgs) Handles trkBarRange.Scroll
@@ -197,17 +251,19 @@ Public Class formGeTAC
                                                                                    upDwnDegLon.ValueChanged, upDwnDegLonScanArea.ValueChanged, _
                                                                                    upDwnMinLat.ValueChanged, upDwnMinLatScanArea.ValueChanged, _
                                                                                    upDwnMinLon.ValueChanged, upDwnMinLonScanArea.ValueChanged
+        If mIsInitialized Then
+            If sender.Equals(Me.upDwnDegLat) Then mFormValues.StartPointLatDegree = upDwnDegLat.Value
+            If sender.Equals(Me.upDwnDegLatScanArea) Then mFormValues.ScanAreaLatDegree = upDwnDegLatScanArea.Value
+            If sender.Equals(Me.upDwnDegLon) Then mFormValues.StartPointLonDegree = upDwnDegLon.Value
+            If sender.Equals(Me.upDwnDegLonScanArea) Then mFormValues.ScanAreaLonDegree = upDwnDegLonScanArea.Value
+            If sender.Equals(Me.upDwnMinLat) Then mFormValues.StartPointLatMinute = upDwnMinLat.Value
+            If sender.Equals(Me.upDwnMinLatScanArea) Then mFormValues.ScanAreaLatMinute = upDwnMinLatScanArea.Value
+            If sender.Equals(Me.upDwnMinLon) Then mFormValues.StartPointLonMinute = upDwnMinLon.Value
+            If sender.Equals(Me.upDwnMinLonScanArea) Then mFormValues.ScanAreaLonMinute = upDwnMinLonScanArea.Value
 
-        If sender.Equals(Me.upDwnDegLat) Then mFormValues.StartPointLatDegree = upDwnDegLat.Value
-        If sender.Equals(Me.upDwnDegLatScanArea) Then mFormValues.ScanAreaLatDegree = upDwnDegLatScanArea.Value
-        If sender.Equals(Me.upDwnDegLon) Then mFormValues.StartPointLonDegree = upDwnDegLon.Value
-        If sender.Equals(Me.upDwnDegLonScanArea) Then mFormValues.ScanAreaLonDegree = upDwnDegLonScanArea.Value
-        If sender.Equals(Me.upDwnMinLat) Then mFormValues.StartPointLatMinute = upDwnMinLat.Value
-        If sender.Equals(Me.upDwnMinLatScanArea) Then mFormValues.ScanAreaLatMinute = upDwnMinLatScanArea.Value
-        If sender.Equals(Me.upDwnMinLon) Then mFormValues.StartPointLonMinute = upDwnMinLon.Value
-        If sender.Equals(Me.upDwnMinLonScanArea) Then mFormValues.ScanAreaLonMinute = upDwnMinLonScanArea.Value
-
-        CreateKML()
+            CalculatePoints()
+            CreateKML()
+        End If
     End Sub
 
     Private Sub trkBar_ValueChanged(sender As Object, e As EventArgs) Handles trkBarStep.ValueChanged, trkBarDwell.ValueChanged, _
@@ -232,37 +288,39 @@ Public Class formGeTAC
 
     Private Sub txtBxLabel_TextChanged(sender As Object, e As EventArgs) Handles txtBxLabelLat.TextChanged, txtBxLabelLon.TextChanged, _
                                                                                     txtBoxLabelLatScanArea.TextChanged, txtBoxLabelLonScanArea.TextChanged
-        If mFormValues IsNot Nothing Then
-            If sender.Equals(Me.txtBxLabelLat) Then
-                Select Case txtBxLabelLat.Text
-                    Case "N"
-                        mFormValues.StartPointLatDirection = LATDirection.N
-                    Case "S"
-                        mFormValues.StartPointLatDirection = LATDirection.N
-                End Select
-            ElseIf sender.Equals(Me.txtBxLabelLon) Then
-                Select Case txtBxLabelLon.Text
-                    Case "E"
-                        mFormValues.StartPointLonDirection = LONDirection.E
-                    Case "W"
-                        mFormValues.StartPointLonDirection = LONDirection.W
-                End Select
-            ElseIf sender.Equals(Me.txtBoxLabelLonScanArea) Then
-                Select Case txtBoxLabelLonScanArea.Text
-                    Case "E"
-                        mFormValues.ScanAreaLonDirection = LONDirection.E
-                    Case "W"
-                        mFormValues.ScanAreaLonDirection = LONDirection.W
-                End Select
-            ElseIf sender.Equals(Me.txtBoxLabelLatScanArea) Then
-                Select Case txtBoxLabelLatScanArea.Text
-                    Case "N"
-                        mFormValues.ScanAreaLatDirection = LATDirection.N
-                    Case "S"
-                        mFormValues.ScanAreaLatDirection = LATDirection.S
-                End Select
+        If mIsInitialized Then
+            If mFormValues IsNot Nothing Then
+                If sender.Equals(Me.txtBxLabelLat) Then
+                    Select Case txtBxLabelLat.Text
+                        Case "N"
+                            mFormValues.StartPointLatDirection = LATDirection.N
+                        Case "S"
+                            mFormValues.StartPointLatDirection = LATDirection.N
+                    End Select
+                ElseIf sender.Equals(Me.txtBxLabelLon) Then
+                    Select Case txtBxLabelLon.Text
+                        Case "E"
+                            mFormValues.StartPointLonDirection = LONDirection.E
+                        Case "W"
+                            mFormValues.StartPointLonDirection = LONDirection.W
+                    End Select
+                ElseIf sender.Equals(Me.txtBoxLabelLonScanArea) Then
+                    Select Case txtBoxLabelLonScanArea.Text
+                        Case "E"
+                            mFormValues.ScanAreaLonDirection = LONDirection.E
+                        Case "W"
+                            mFormValues.ScanAreaLonDirection = LONDirection.W
+                    End Select
+                ElseIf sender.Equals(Me.txtBoxLabelLatScanArea) Then
+                    Select Case txtBoxLabelLatScanArea.Text
+                        Case "N"
+                            mFormValues.ScanAreaLatDirection = LATDirection.N
+                        Case "S"
+                            mFormValues.ScanAreaLatDirection = LATDirection.S
+                    End Select
+                End If
+                CreateKML()
             End If
-            CreateKML()
         End If
     End Sub
 
@@ -287,4 +345,135 @@ Public Class formGeTAC
     Public Function MakeNormal()
         SetWindowPos(Me.Handle(), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE Or SWP_NOSIZE)
     End Function
+
+    Private Sub bckGrndCacheRead_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bckGrndCacheRead.DoWork
+        Do
+            mCacheSizeBytes = GetFolderSize(mCacheLocation, True)
+            bckGrndCacheRead.ReportProgress(mCacheSizeBytes)
+            System.Threading.Thread.Sleep(2000)
+        Loop
+    End Sub
+
+    Private Sub bckGrndCacheRead_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bckGrndCacheRead.ProgressChanged
+        Dim bytes = e.ProgressPercentage
+        mCacheSizeMegaBytes = bytes / 1048576
+        Me.lblCacheSize.Text = mCacheSizeMegaBytes & " MB (" & String.Format("{0:n0}", bytes) & " bytes)"
+    End Sub
+
+    Private Sub bckGrndMoveWindow_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bckGrndMoveWindow.DoWork
+        Dim progress As Double = 0
+        Dim remainder As Double = 0
+        For i = 0 To LatitudePoints - 1
+            remainder = i / 2 - Math.Floor(i / 2)
+            If remainder = 0 Then
+                For j = 0 To LongitudePoints - 1
+                    If mProgramIsPaused Then
+                        Do Until Not mProgramIsPaused
+                        Loop
+                    End If
+                    If mIsCancelled Then Exit Sub
+                    CreateKML(i, j)
+                    progress += 1
+                    bckGrndMoveWindow.ReportProgress(progress)
+                    Threading.Thread.Sleep(mFormValues.Dwell * 100)
+                Next
+            Else
+                For j = LongitudePoints - 1 To 0 Step -1
+                    If mProgramIsPaused Then
+                        Do Until Not mProgramIsPaused
+                        Loop
+                    End If
+                    If mIsCancelled Then Exit Sub
+                    CreateKML(i, j)
+                    progress += 1
+                    bckGrndMoveWindow.ReportProgress(progress)
+                    Threading.Thread.Sleep(mFormValues.Dwell * 100)
+                Next
+            End If
+
+        Next
+
+    End Sub
+
+    Private Declare Function FindWindow Lib "user32.dll" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As IntPtr
+    Private Declare Function SetForegroundWindow Lib "user32" (ByVal hWnd As IntPtr) As Integer
+    Private Declare Function SetFocus Lib "user32.dll" (ByVal hWnd As IntPtr) As Integer
+
+    Private Sub bckGrndMoveWindow_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles bckGrndMoveWindow.ProgressChanged
+        Dim progress = e.ProgressPercentage
+        Me.lblOnPoint.Text = progress
+        Me.ProgressBar1.Value = (progress / (LongitudePoints * LatitudePoints)) * 100
+        SetForegroundWindow(Me.Handle)
+        SetFocus(Me.Handle)
+    End Sub
+    
+
+    Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        btnStart.Enabled = False
+        mIsCancelled = False
+        bckGrndMoveWindow.RunWorkerAsync()
+        mAlarmTime = Date.Now.AddHours(mScanHour)
+        mAlarmTime = mAlarmTime.AddMinutes(mScanMinute)
+        mAlarmTime = mAlarmTime.AddSeconds(mScanSecond)
+        Timer1.Start()
+    End Sub
+
+    Private Sub btnStop_Click(sender As Object, e As EventArgs) Handles btnStop.Click
+        If bckGrndMoveWindow.WorkerSupportsCancellation Then
+            mIsCancelled = True
+            bckGrndMoveWindow.CancelAsync()
+        End If
+        btnStart.Enabled = True
+        btnPause.Text = "Pause"
+        btnPause.BackColor = SystemColors.ControlLight
+        mProgramIsPaused = False
+        Timer1.Stop()
+    End Sub
+
+    Private Sub btnPause_Click(sender As Object, e As EventArgs) Handles btnPause.Click
+        Select Case btnPause.Text
+            Case "Pause"
+                btnPause.Text = "Resume"
+                btnPause.BackColor = Color.Yellow
+                mProgramIsPaused = True
+            Case "Resume"
+                btnPause.Text = "Pause"
+                btnPause.BackColor = SystemColors.ControlLight
+                mProgramIsPaused = False
+        End Select
+    End Sub
+
+    Private Sub bckGrndMoveWindow_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles bckGrndMoveWindow.RunWorkerCompleted
+        btnStart.Enabled = True
+        Timer1.Stop()
+    End Sub
+
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        If mProgramIsPaused Then
+            mAlarmTime = mAlarmTime.AddSeconds(1)
+        Else
+            If mAlarmTime < Date.Now Then
+                Me.Timer1.Stop()
+            Else
+                Dim remaining = mAlarmTime.Subtract(Date.Now)
+                Me.lblTimeRemain.Text = String.Format("{0}:{1:d2}:{2:d2}", remaining.Hours, remaining.Minutes, remaining.Seconds)
+            End If
+        End If
+    End Sub
+
+    Private Sub SAVECACHEToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SAVECACHEToolStripMenuItem.Click
+        Dim dialog As New FolderBrowserDialog
+        Dim destinationPath As String = String.Empty
+        Dim cachePath As String = String.Empty
+
+        dialog.Description = "Choose folder to save cache in."
+
+        If dialog.ShowDialog <> Windows.Forms.DialogResult.Cancel Then
+            destinationPath = dialog.SelectedPath
+        End If
+        cachePath = getCacheLocation()
+
+        SaveCache(cachePath, destinationPath, Me)
+    End Sub
 End Class

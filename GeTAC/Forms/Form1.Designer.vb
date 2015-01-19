@@ -22,14 +22,13 @@ Partial Class formGeTAC
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(formGeTAC))
         Me.btnStart = New System.Windows.Forms.Button()
         Me.grpBxStartPoint = New System.Windows.Forms.GroupBox()
         Me.upDwnMinLon = New System.Windows.Forms.NumericUpDown()
         Me.upDwnMinLat = New System.Windows.Forms.NumericUpDown()
         Me.upDwnDegLon = New System.Windows.Forms.NumericUpDown()
-        Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
-        Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
         Me.upDwnDegLat = New System.Windows.Forms.NumericUpDown()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -39,8 +38,6 @@ Partial Class formGeTAC
         Me.upDwnMinLonScanArea = New System.Windows.Forms.NumericUpDown()
         Me.upDwnMinLatScanArea = New System.Windows.Forms.NumericUpDown()
         Me.upDwnDegLonScanArea = New System.Windows.Forms.NumericUpDown()
-        Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
-        Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
         Me.upDwnDegLatScanArea = New System.Windows.Forms.NumericUpDown()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -59,10 +56,8 @@ Partial Class formGeTAC
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.lblCacheSize = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -70,7 +65,6 @@ Partial Class formGeTAC
         Me.trkBarRange = New System.Windows.Forms.TrackBar()
         Me.chkBoxOnTop = New System.Windows.Forms.CheckBox()
         Me.chkBoxAutoRange = New System.Windows.Forms.CheckBox()
-        Me.TextBoxColor1 = New GeTAC.TextBoxColor()
         Me.btnStop = New System.Windows.Forms.Button()
         Me.btnPause = New System.Windows.Forms.Button()
         Me.lblTilt = New System.Windows.Forms.Label()
@@ -81,6 +75,22 @@ Partial Class formGeTAC
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
+        Me.bckGrndCacheRead = New System.ComponentModel.BackgroundWorker()
+        Me.bckGrndMoveWindow = New System.ComponentModel.BackgroundWorker()
+        Me.bckGrndTimer = New System.ComponentModel.BackgroundWorker()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.txtBxColorPointsCheck = New GeTAC.TextBoxColor()
+        Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
+        Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
+        Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
+        Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.FILEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HOWTOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ABOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SAVECACHEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.grpBxStartPoint.SuspendLayout()
         CType(Me.upDwnMinLon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.upDwnMinLat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -98,6 +108,7 @@ Partial Class formGeTAC
         CType(Me.trkBarRange, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.trkBarTilt, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.trkBarHeading, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnStart
@@ -121,7 +132,7 @@ Partial Class formGeTAC
         Me.grpBxStartPoint.Controls.Add(Me.Label3)
         Me.grpBxStartPoint.Controls.Add(Me.Label2)
         Me.grpBxStartPoint.Controls.Add(Me.Label1)
-        Me.grpBxStartPoint.Location = New System.Drawing.Point(12, 12)
+        Me.grpBxStartPoint.Location = New System.Drawing.Point(12, 33)
         Me.grpBxStartPoint.Name = "grpBxStartPoint"
         Me.grpBxStartPoint.Size = New System.Drawing.Size(271, 89)
         Me.grpBxStartPoint.TabIndex = 1
@@ -151,34 +162,6 @@ Partial Class formGeTAC
         Me.upDwnDegLon.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLon.TabIndex = 8
         Me.upDwnDegLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtBxLabelLon
-        '
-        Me.txtBxLabelLon.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBxLabelLon.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBxLabelLon.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBxLabelLon.Location = New System.Drawing.Point(59, 58)
-        Me.txtBxLabelLon.Name = "txtBxLabelLon"
-        Me.txtBxLabelLon.ReadOnly = True
-        Me.txtBxLabelLon.Size = New System.Drawing.Size(25, 20)
-        Me.txtBxLabelLon.TabIndex = 7
-        Me.txtBxLabelLon.TabStop = False
-        Me.txtBxLabelLon.Text = "E"
-        Me.txtBxLabelLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'txtBxLabelLat
-        '
-        Me.txtBxLabelLat.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBxLabelLat.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBxLabelLat.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBxLabelLat.Location = New System.Drawing.Point(59, 29)
-        Me.txtBxLabelLat.Name = "txtBxLabelLat"
-        Me.txtBxLabelLat.ReadOnly = True
-        Me.txtBxLabelLat.Size = New System.Drawing.Size(25, 20)
-        Me.txtBxLabelLat.TabIndex = 6
-        Me.txtBxLabelLat.TabStop = False
-        Me.txtBxLabelLat.Text = "N"
-        Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'upDwnDegLat
         '
@@ -236,7 +219,7 @@ Partial Class formGeTAC
         Me.grpBxScanArea.Controls.Add(Me.Label6)
         Me.grpBxScanArea.Controls.Add(Me.Label7)
         Me.grpBxScanArea.Controls.Add(Me.Label8)
-        Me.grpBxScanArea.Location = New System.Drawing.Point(288, 12)
+        Me.grpBxScanArea.Location = New System.Drawing.Point(288, 33)
         Me.grpBxScanArea.Name = "grpBxScanArea"
         Me.grpBxScanArea.Size = New System.Drawing.Size(271, 89)
         Me.grpBxScanArea.TabIndex = 2
@@ -266,34 +249,6 @@ Partial Class formGeTAC
         Me.upDwnDegLonScanArea.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLonScanArea.TabIndex = 18
         Me.upDwnDegLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtBoxLabelLonScanArea
-        '
-        Me.txtBoxLabelLonScanArea.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBoxLabelLonScanArea.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBoxLabelLonScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBoxLabelLonScanArea.Location = New System.Drawing.Point(62, 57)
-        Me.txtBoxLabelLonScanArea.Name = "txtBoxLabelLonScanArea"
-        Me.txtBoxLabelLonScanArea.ReadOnly = True
-        Me.txtBoxLabelLonScanArea.Size = New System.Drawing.Size(25, 20)
-        Me.txtBoxLabelLonScanArea.TabIndex = 17
-        Me.txtBoxLabelLonScanArea.TabStop = False
-        Me.txtBoxLabelLonScanArea.Text = "E"
-        Me.txtBoxLabelLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'txtBoxLabelLatScanArea
-        '
-        Me.txtBoxLabelLatScanArea.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.txtBoxLabelLatScanArea.Cursor = System.Windows.Forms.Cursors.Default
-        Me.txtBoxLabelLatScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtBoxLabelLatScanArea.Location = New System.Drawing.Point(62, 28)
-        Me.txtBoxLabelLatScanArea.Name = "txtBoxLabelLatScanArea"
-        Me.txtBoxLabelLatScanArea.ReadOnly = True
-        Me.txtBoxLabelLatScanArea.Size = New System.Drawing.Size(25, 20)
-        Me.txtBoxLabelLatScanArea.TabIndex = 16
-        Me.txtBoxLabelLatScanArea.TabStop = False
-        Me.txtBoxLabelLatScanArea.Text = "S"
-        Me.txtBoxLabelLatScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'upDwnDegLatScanArea
         '
@@ -353,14 +308,12 @@ Partial Class formGeTAC
         Me.grpBoxProgress.Controls.Add(Me.Label16)
         Me.grpBoxProgress.Controls.Add(Me.Label15)
         Me.grpBoxProgress.Controls.Add(Me.Label10)
-        Me.grpBoxProgress.Controls.Add(Me.Label14)
         Me.grpBoxProgress.Controls.Add(Me.Label13)
         Me.grpBoxProgress.Controls.Add(Me.ProgressBar1)
-        Me.grpBoxProgress.Controls.Add(Me.Label9)
         Me.grpBoxProgress.Controls.Add(Me.lblCacheSize)
         Me.grpBoxProgress.Controls.Add(Me.Label11)
         Me.grpBoxProgress.Controls.Add(Me.Label12)
-        Me.grpBoxProgress.Location = New System.Drawing.Point(12, 107)
+        Me.grpBoxProgress.Location = New System.Drawing.Point(12, 128)
         Me.grpBoxProgress.Name = "grpBoxProgress"
         Me.grpBoxProgress.Size = New System.Drawing.Size(547, 148)
         Me.grpBoxProgress.TabIndex = 8
@@ -480,20 +433,10 @@ Partial Class formGeTAC
         Me.Label10.TabIndex = 11
         Me.Label10.Text = "Time Remaining"
         '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(236, 42)
-        Me.Label14.Name = "Label14"
-        Me.Label14.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Label14.Size = New System.Drawing.Size(35, 13)
-        Me.Label14.TabIndex = 10
-        Me.Label14.Text = "(LON)"
-        '
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(6, 19)
+        Me.Label13.Location = New System.Drawing.Point(6, 29)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(64, 13)
         Me.Label13.TabIndex = 9
@@ -506,20 +449,10 @@ Partial Class formGeTAC
         Me.ProgressBar1.Size = New System.Drawing.Size(189, 23)
         Me.ProgressBar1.TabIndex = 8
         '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(238, 19)
-        Me.Label9.Name = "Label9"
-        Me.Label9.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Label9.Size = New System.Drawing.Size(33, 13)
-        Me.Label9.TabIndex = 7
-        Me.Label9.Text = "(LAT)"
-        '
         'lblCacheSize
         '
         Me.lblCacheSize.AutoSize = True
-        Me.lblCacheSize.Location = New System.Drawing.Point(6, 42)
+        Me.lblCacheSize.Location = New System.Drawing.Point(99, 29)
         Me.lblCacheSize.Name = "lblCacheSize"
         Me.lblCacheSize.Size = New System.Drawing.Size(31, 13)
         Me.lblCacheSize.TabIndex = 6
@@ -548,7 +481,7 @@ Partial Class formGeTAC
         Me.GroupBox1.Controls.Add(Me.trkBarRange)
         Me.GroupBox1.Controls.Add(Me.chkBoxOnTop)
         Me.GroupBox1.Controls.Add(Me.chkBoxAutoRange)
-        Me.GroupBox1.Controls.Add(Me.TextBoxColor1)
+        Me.GroupBox1.Controls.Add(Me.txtBxColorPointsCheck)
         Me.GroupBox1.Controls.Add(Me.btnStop)
         Me.GroupBox1.Controls.Add(Me.btnPause)
         Me.GroupBox1.Controls.Add(Me.lblTilt)
@@ -560,7 +493,7 @@ Partial Class formGeTAC
         Me.GroupBox1.Controls.Add(Me.Label31)
         Me.GroupBox1.Controls.Add(Me.Label32)
         Me.GroupBox1.Controls.Add(Me.Label33)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 261)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 282)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(547, 143)
         Me.GroupBox1.TabIndex = 23
@@ -595,16 +528,6 @@ Partial Class formGeTAC
         Me.chkBoxAutoRange.TabIndex = 26
         Me.chkBoxAutoRange.Text = "Auto Range"
         Me.chkBoxAutoRange.UseVisualStyleBackColor = True
-        '
-        'TextBoxColor1
-        '
-        Me.TextBoxColor1.BackColor = System.Drawing.Color.Lime
-        Me.TextBoxColor1.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBoxColor1.Location = New System.Drawing.Point(354, 63)
-        Me.TextBoxColor1.Name = "TextBoxColor1"
-        Me.TextBoxColor1.Size = New System.Drawing.Size(184, 20)
-        Me.TextBoxColor1.TabIndex = 25
-        Me.TextBoxColor1.TabStop = False
         '
         'btnStop
         '
@@ -702,17 +625,152 @@ Partial Class formGeTAC
         Me.Label33.TabIndex = 4
         Me.Label33.Text = "Heading"
         '
+        'bckGrndCacheRead
+        '
+        Me.bckGrndCacheRead.WorkerReportsProgress = True
+        '
+        'bckGrndMoveWindow
+        '
+        Me.bckGrndMoveWindow.WorkerReportsProgress = True
+        Me.bckGrndMoveWindow.WorkerSupportsCancellation = True
+        '
+        'bckGrndTimer
+        '
+        Me.bckGrndTimer.WorkerReportsProgress = True
+        Me.bckGrndTimer.WorkerSupportsCancellation = True
+        '
+        'Timer1
+        '
+        Me.Timer1.Interval = 1000
+        '
+        'ToolTip1
+        '
+        Me.ToolTip1.AutomaticDelay = 0
+        Me.ToolTip1.ShowAlways = True
+        Me.ToolTip1.Tag = ""
+        '
+        'txtBxColorPointsCheck
+        '
+        Me.txtBxColorPointsCheck.BackColor = System.Drawing.Color.Lime
+        Me.txtBxColorPointsCheck.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBxColorPointsCheck.Location = New System.Drawing.Point(354, 63)
+        Me.txtBxColorPointsCheck.Name = "txtBxColorPointsCheck"
+        Me.txtBxColorPointsCheck.Size = New System.Drawing.Size(184, 20)
+        Me.txtBxColorPointsCheck.TabIndex = 25
+        Me.txtBxColorPointsCheck.TabStop = False
+        Me.ToolTip1.SetToolTip(Me.txtBxColorPointsCheck, "If red, your step size is too large for your scan area." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "If yellow, your points m" & _
+        "ay be too high for a 2GB Cache")
+        '
+        'txtBoxLabelLonScanArea
+        '
+        Me.txtBoxLabelLonScanArea.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBoxLabelLonScanArea.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBoxLabelLonScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBoxLabelLonScanArea.Location = New System.Drawing.Point(62, 57)
+        Me.txtBoxLabelLonScanArea.Name = "txtBoxLabelLonScanArea"
+        Me.txtBoxLabelLonScanArea.ReadOnly = True
+        Me.txtBoxLabelLonScanArea.Size = New System.Drawing.Size(25, 20)
+        Me.txtBoxLabelLonScanArea.TabIndex = 17
+        Me.txtBoxLabelLonScanArea.TabStop = False
+        Me.txtBoxLabelLonScanArea.Text = "E"
+        Me.txtBoxLabelLonScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtBoxLabelLatScanArea
+        '
+        Me.txtBoxLabelLatScanArea.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBoxLabelLatScanArea.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBoxLabelLatScanArea.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBoxLabelLatScanArea.Location = New System.Drawing.Point(62, 28)
+        Me.txtBoxLabelLatScanArea.Name = "txtBoxLabelLatScanArea"
+        Me.txtBoxLabelLatScanArea.ReadOnly = True
+        Me.txtBoxLabelLatScanArea.Size = New System.Drawing.Size(25, 20)
+        Me.txtBoxLabelLatScanArea.TabIndex = 16
+        Me.txtBoxLabelLatScanArea.TabStop = False
+        Me.txtBoxLabelLatScanArea.Text = "S"
+        Me.txtBoxLabelLatScanArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtBxLabelLon
+        '
+        Me.txtBxLabelLon.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBxLabelLon.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBxLabelLon.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBxLabelLon.Location = New System.Drawing.Point(59, 58)
+        Me.txtBxLabelLon.Name = "txtBxLabelLon"
+        Me.txtBxLabelLon.ReadOnly = True
+        Me.txtBxLabelLon.Size = New System.Drawing.Size(25, 20)
+        Me.txtBxLabelLon.TabIndex = 7
+        Me.txtBxLabelLon.TabStop = False
+        Me.txtBxLabelLon.Text = "E"
+        Me.txtBxLabelLon.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'txtBxLabelLat
+        '
+        Me.txtBxLabelLat.BackColor = System.Drawing.SystemColors.ControlLight
+        Me.txtBxLabelLat.Cursor = System.Windows.Forms.Cursors.Default
+        Me.txtBxLabelLat.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.txtBxLabelLat.Location = New System.Drawing.Point(59, 29)
+        Me.txtBxLabelLat.Name = "txtBxLabelLat"
+        Me.txtBxLabelLat.ReadOnly = True
+        Me.txtBxLabelLat.Size = New System.Drawing.Size(25, 20)
+        Me.txtBxLabelLat.TabIndex = 6
+        Me.txtBxLabelLat.TabStop = False
+        Me.txtBxLabelLat.Text = "N"
+        Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FILEToolStripMenuItem, Me.HELPToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(569, 24)
+        Me.MenuStrip1.TabIndex = 24
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'FILEToolStripMenuItem
+        '
+        Me.FILEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SAVECACHEToolStripMenuItem})
+        Me.FILEToolStripMenuItem.Name = "FILEToolStripMenuItem"
+        Me.FILEToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
+        Me.FILEToolStripMenuItem.Text = "FILE"
+        '
+        'HELPToolStripMenuItem
+        '
+        Me.HELPToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HOWTOToolStripMenuItem, Me.ABOUTToolStripMenuItem})
+        Me.HELPToolStripMenuItem.Name = "HELPToolStripMenuItem"
+        Me.HELPToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
+        Me.HELPToolStripMenuItem.Text = "HELP"
+        '
+        'HOWTOToolStripMenuItem
+        '
+        Me.HOWTOToolStripMenuItem.Name = "HOWTOToolStripMenuItem"
+        Me.HOWTOToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.HOWTOToolStripMenuItem.Text = "HOW TO"
+        '
+        'ABOUTToolStripMenuItem
+        '
+        Me.ABOUTToolStripMenuItem.Name = "ABOUTToolStripMenuItem"
+        Me.ABOUTToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ABOUTToolStripMenuItem.Text = "ABOUT"
+        '
+        'SAVECACHEToolStripMenuItem
+        '
+        Me.SAVECACHEToolStripMenuItem.Name = "SAVECACHEToolStripMenuItem"
+        Me.SAVECACHEToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.SAVECACHEToolStripMenuItem.Text = "SAVE CACHE"
+        '
         'formGeTAC
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.ControlLight
-        Me.ClientSize = New System.Drawing.Size(569, 416)
+        Me.ClientSize = New System.Drawing.Size(569, 456)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.grpBoxProgress)
         Me.Controls.Add(Me.grpBxScanArea)
         Me.Controls.Add(Me.grpBxStartPoint)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "formGeTAC"
         Me.Text = "GeTAC: Google Earth Tile Acquisition Cache"
         Me.grpBxStartPoint.ResumeLayout(False)
@@ -736,7 +794,10 @@ Partial Class formGeTAC
         CType(Me.trkBarRange, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.trkBarTilt, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.trkBarHeading, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents btnStart As System.Windows.Forms.Button
@@ -763,10 +824,8 @@ Partial Class formGeTAC
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents ProgressBar1 As System.Windows.Forms.ProgressBar
-    Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents lblCacheSize As System.Windows.Forms.Label
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
@@ -786,7 +845,7 @@ Partial Class formGeTAC
     Friend WithEvents trkBarRange As System.Windows.Forms.TrackBar
     Friend WithEvents chkBoxOnTop As System.Windows.Forms.CheckBox
     Friend WithEvents chkBoxAutoRange As System.Windows.Forms.CheckBox
-    Friend WithEvents TextBoxColor1 As GeTAC.TextBoxColor
+    Friend WithEvents txtBxColorPointsCheck As GeTAC.TextBoxColor
     Friend WithEvents upDwnMinLonScanArea As System.Windows.Forms.NumericUpDown
     Friend WithEvents upDwnMinLatScanArea As System.Windows.Forms.NumericUpDown
     Friend WithEvents upDwnDegLonScanArea As System.Windows.Forms.NumericUpDown
@@ -797,5 +856,16 @@ Partial Class formGeTAC
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents bckGrndCacheRead As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bckGrndMoveWindow As System.ComponentModel.BackgroundWorker
+    Friend WithEvents bckGrndTimer As System.ComponentModel.BackgroundWorker
+    Friend WithEvents Timer1 As System.Windows.Forms.Timer
+    Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
+    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents FILEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SAVECACHEToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents HELPToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents HOWTOToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ABOUTToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class
