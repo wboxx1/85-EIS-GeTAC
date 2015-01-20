@@ -78,7 +78,7 @@ Public Class formGeTAC
         mIsInitialized = True
 
     End Sub
-
+   
     Private Sub CalculateTime()
         If Not ScanTooLarge Then
             mScanHour = CalculateHour(mDwellTime * LatitudePoints * LongitudePoints)
