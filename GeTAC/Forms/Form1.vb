@@ -6,9 +6,11 @@ Imports SharpKml.Engine
 Imports GeTAC.FormValues
 Imports GeTAC.GeTAC_Controller
 Imports System.Runtime.InteropServices
-
+Imports NLog
 
 Public Class formGeTAC
+
+    Private log As Logger
     Private mFormValues As FormValues
     Private mFormValuesFileName As String
     Private mGoogleEarthIsInstalled As Boolean
@@ -78,7 +80,7 @@ Public Class formGeTAC
         mIsInitialized = True
 
     End Sub
-   
+
     Private Sub CalculateTime()
         If Not ScanTooLarge Then
             mScanHour = CalculateHour(mDwellTime * LatitudePoints * LongitudePoints)
@@ -106,7 +108,7 @@ Public Class formGeTAC
             End If
         End If
 
-        
+
 
     End Sub
     Private Sub CreateKML(Optional ByVal latMult As Integer = 0, Optional ByVal lonMult As Integer = 0)
@@ -406,7 +408,7 @@ Public Class formGeTAC
         SetForegroundWindow(Me.Handle)
         SetFocus(Me.Handle)
     End Sub
-    
+
 
     Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
         btnStart.Enabled = False

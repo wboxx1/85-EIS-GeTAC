@@ -1,4 +1,5 @@
-﻿Public Class ApplicationLookAndFeel
+﻿
+Public Class ApplicationLookAndFeel
 
     Shared Sub ApplyTheme(ByVal C As TextBoxLabel)
         C.Font = New Font("Cambria", 9.0F, FontStyle.Bold)
@@ -37,7 +38,6 @@
                 Case "System.Windows.Forms.Button"
                     ApplyTheme(c)
             End Select
-
         Next
     End Sub
 
