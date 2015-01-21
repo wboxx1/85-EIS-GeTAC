@@ -298,7 +298,7 @@ Public Class GeTAC_Controller
             Dim appData As String = GetFolderPath(SpecialFolder.ApplicationData)
             If Not Directory.Exists(appData & "\GeTAC") Then Directory.CreateDirectory(appData & "\GeTAC")
 
-            Dim writer As StreamWriter = New StreamWriter("C:\\Users\Boxx\AppData\Roaming\GeTAC\LinkKML.kml")
+            Dim writer As StreamWriter = New StreamWriter(appData & "\GeTAC\LinkKML.kml")
 
             Try
                 writer.Write(serializer.Xml)

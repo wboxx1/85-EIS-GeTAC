@@ -80,17 +80,17 @@ Partial Class formGeTAC
         Me.bckGrndTimer = New System.ComponentModel.BackgroundWorker()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.FILEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SAVECACHEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.HOWTOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ABOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.txtBxColorPointsCheck = New GeTAC.TextBoxColor()
         Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
         Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.FILEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.HOWTOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ABOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SAVECACHEToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.grpBxStartPoint.SuspendLayout()
         CType(Me.upDwnMinLon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.upDwnMinLat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -158,6 +158,7 @@ Partial Class formGeTAC
         'upDwnDegLon
         '
         Me.upDwnDegLon.Location = New System.Drawing.Point(102, 58)
+        Me.upDwnDegLon.Maximum = New Decimal(New Integer() {180, 0, 0, 0})
         Me.upDwnDegLon.Name = "upDwnDegLon"
         Me.upDwnDegLon.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLon.TabIndex = 8
@@ -166,6 +167,7 @@ Partial Class formGeTAC
         'upDwnDegLat
         '
         Me.upDwnDegLat.Location = New System.Drawing.Point(102, 29)
+        Me.upDwnDegLat.Maximum = New Decimal(New Integer() {90, 0, 0, 0})
         Me.upDwnDegLat.Name = "upDwnDegLat"
         Me.upDwnDegLat.Size = New System.Drawing.Size(57, 20)
         Me.upDwnDegLat.TabIndex = 4
@@ -649,6 +651,47 @@ Partial Class formGeTAC
         Me.ToolTip1.ShowAlways = True
         Me.ToolTip1.Tag = ""
         '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FILEToolStripMenuItem, Me.HELPToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(569, 24)
+        Me.MenuStrip1.TabIndex = 24
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'FILEToolStripMenuItem
+        '
+        Me.FILEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SAVECACHEToolStripMenuItem})
+        Me.FILEToolStripMenuItem.Name = "FILEToolStripMenuItem"
+        Me.FILEToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
+        Me.FILEToolStripMenuItem.Text = "FILE"
+        '
+        'SAVECACHEToolStripMenuItem
+        '
+        Me.SAVECACHEToolStripMenuItem.Name = "SAVECACHEToolStripMenuItem"
+        Me.SAVECACHEToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.SAVECACHEToolStripMenuItem.Text = "SAVE CACHE"
+        '
+        'HELPToolStripMenuItem
+        '
+        Me.HELPToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HOWTOToolStripMenuItem, Me.ABOUTToolStripMenuItem})
+        Me.HELPToolStripMenuItem.Name = "HELPToolStripMenuItem"
+        Me.HELPToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
+        Me.HELPToolStripMenuItem.Text = "HELP"
+        '
+        'HOWTOToolStripMenuItem
+        '
+        Me.HOWTOToolStripMenuItem.Name = "HOWTOToolStripMenuItem"
+        Me.HOWTOToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.HOWTOToolStripMenuItem.Text = "HOW TO"
+        '
+        'ABOUTToolStripMenuItem
+        '
+        Me.ABOUTToolStripMenuItem.Name = "ABOUTToolStripMenuItem"
+        Me.ABOUTToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
+        Me.ABOUTToolStripMenuItem.Text = "ABOUT"
+        '
         'txtBxColorPointsCheck
         '
         Me.txtBxColorPointsCheck.BackColor = System.Drawing.Color.Lime
@@ -716,47 +759,6 @@ Partial Class formGeTAC
         Me.txtBxLabelLat.TabStop = False
         Me.txtBxLabelLat.Text = "N"
         Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'MenuStrip1
-        '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FILEToolStripMenuItem, Me.HELPToolStripMenuItem})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(569, 24)
-        Me.MenuStrip1.TabIndex = 24
-        Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'FILEToolStripMenuItem
-        '
-        Me.FILEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SAVECACHEToolStripMenuItem})
-        Me.FILEToolStripMenuItem.Name = "FILEToolStripMenuItem"
-        Me.FILEToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
-        Me.FILEToolStripMenuItem.Text = "FILE"
-        '
-        'HELPToolStripMenuItem
-        '
-        Me.HELPToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.HOWTOToolStripMenuItem, Me.ABOUTToolStripMenuItem})
-        Me.HELPToolStripMenuItem.Name = "HELPToolStripMenuItem"
-        Me.HELPToolStripMenuItem.Size = New System.Drawing.Size(47, 20)
-        Me.HELPToolStripMenuItem.Text = "HELP"
-        '
-        'HOWTOToolStripMenuItem
-        '
-        Me.HOWTOToolStripMenuItem.Name = "HOWTOToolStripMenuItem"
-        Me.HOWTOToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.HOWTOToolStripMenuItem.Text = "HOW TO"
-        '
-        'ABOUTToolStripMenuItem
-        '
-        Me.ABOUTToolStripMenuItem.Name = "ABOUTToolStripMenuItem"
-        Me.ABOUTToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.ABOUTToolStripMenuItem.Text = "ABOUT"
-        '
-        'SAVECACHEToolStripMenuItem
-        '
-        Me.SAVECACHEToolStripMenuItem.Name = "SAVECACHEToolStripMenuItem"
-        Me.SAVECACHEToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
-        Me.SAVECACHEToolStripMenuItem.Text = "SAVE CACHE"
         '
         'formGeTAC
         '

@@ -167,7 +167,7 @@ Public Class formGeTAC
         mGoogleEarthIsInstalled = False
         mCacheSizeBytes = New Long()
         mCacheSizeMegaBytes = New Long()
-        mKMLPath = "C:\\Users\Boxx\AppData\Roaming\GeTAC\LinkKML.kml"
+        mKMLPath = GetFolderPath(SpecialFolder.ApplicationData) & "\GeTAC\LinkKML.kml"
         mDwellTime = 0
         LatitudePoints = 0
         LongitudePoints = 0
@@ -310,7 +310,7 @@ Public Class formGeTAC
                                                                                    upDwnMinLon.ValueChanged, upDwnMinLonScanArea.ValueChanged
 
         If mIsInitialized Then
-            log.Trace("Starting sub 'upDwn_ValueChanged()'.")
+            log.Trace("Starting sub 'upDwn_ValueChanged()'")
             If sender.Equals(Me.upDwnDegLat) Then mFormValues.StartPointLatDegree = upDwnDegLat.Value
             If sender.Equals(Me.upDwnDegLatScanArea) Then mFormValues.ScanAreaLatDegree = upDwnDegLatScanArea.Value
             If sender.Equals(Me.upDwnDegLon) Then mFormValues.StartPointLonDegree = upDwnDegLon.Value
@@ -360,7 +360,7 @@ Public Class formGeTAC
                         Case "N"
                             mFormValues.StartPointLatDirection = LATDirection.N
                         Case "S"
-                            mFormValues.StartPointLatDirection = LATDirection.N
+                            mFormValues.StartPointLatDirection = LATDirection.S
                     End Select
                 ElseIf sender.Equals(Me.txtBxLabelLon) Then
                     Select Case txtBxLabelLon.Text
