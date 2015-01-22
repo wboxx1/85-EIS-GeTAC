@@ -45,6 +45,9 @@
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>GeTAC2.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
@@ -76,7 +79,14 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Controllers\GeTAC_Controller.vb" />
+    <Compile Include="GeTAC_Splash.Designer.vb">
+      <DependentUpon>GeTAC_Splash.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GeTAC_Splash.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Objects\ApplicationLookAndFeel.vb" />
     <Compile Include="Forms\Form1.vb">
       <SubType>Form</SubType>
@@ -113,6 +123,9 @@
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GeTAC_Splash.resx">
+      <DependentUpon>GeTAC_Splash.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -131,6 +144,8 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <Content Include="GeTAC.ico" />
+    <Content Include="GeTAC2.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

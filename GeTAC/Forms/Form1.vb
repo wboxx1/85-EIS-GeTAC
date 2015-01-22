@@ -37,6 +37,7 @@ Public Class formGeTAC
 
         ' This call is required by the designer.
         InitializeComponent()
+        Threading.Thread.Sleep(2000)
         log.Trace("Initialize Components Complete.")
         ' Add any initialization after the InitializeComponent() call.
 
