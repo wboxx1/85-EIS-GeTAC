@@ -77,6 +77,7 @@ Public Class GeTAC_Controller
             mainForm.lblDwell.Text = mainForm.trkBarDwell.Value / 10 & " Sec"
             mainForm.chkBoxAutoRange.Checked = If(values.AutoRange = Nothing, False, values.AutoRange)
             mainForm.chkBoxOnTop.Checked = If(values.OnTop = Nothing, True, values.OnTop)
+            mainForm.chkBoxGridOn.Checked = If(values.GridOn = Nothing, True, values.GridOn)
         Catch ex As Exception
             log.Error("Error in sub 'FillmainForm()': " & ex.Message)
             MsgBox("Error in sub 'FillMainForm()': " & ex.Message, MsgBoxStyle.MsgBoxSetForeground)
@@ -223,7 +224,11 @@ Public Class GeTAC_Controller
             linestring1.AltitudeMode = AltitudeMode.ClampToGround
             linestring1.Tessellate = True
             style1.Line = New LineStyle
-            style1.Line.Color = New Color32(255, 0, 255, 255)
+            If formValues.GridOn Then
+                style1.Line.Color = New Color32(255, 0, 255, 255)
+            Else
+                style1.Line.Color = New Color32(0, 0, 255, 255)
+            End If
             style1.Line.Width = 3
             placemark1.AddStyle(style1)
             placemark1.Geometry = linestring1
@@ -254,10 +259,15 @@ Public Class GeTAC_Controller
             linestring2.AltitudeMode = AltitudeMode.ClampToGround
             linestring2.Tessellate = True
             style2.Line = New LineStyle
-            style2.Line.Color = New Color32(255, 0, 255, 0)
+            If formValues.GridOn Then
+                style2.Line.Color = New Color32(255, 0, 255, 0)
+            Else
+                style2.Line.Color = New Color32(0, 0, 255, 0)
+            End If
             style2.Line.Width = 3
             placemark2.AddStyle(style2)
             placemark2.Geometry = linestring2
+
 
 
             point.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _

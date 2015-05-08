@@ -89,6 +89,7 @@ Partial Class formGeTAC
         Me.chkBoxScreenShot = New System.Windows.Forms.CheckBox()
         Me.SCREENSHOTDIRToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.txtBoxScreenShotDir = New System.Windows.Forms.ToolStripTextBox()
+        Me.chkBoxGridOn = New System.Windows.Forms.CheckBox()
         Me.txtBxColorPointsCheck = New GeTAC.TextBoxColor()
         Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
         Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
@@ -483,6 +484,7 @@ Partial Class formGeTAC
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.chkBoxGridOn)
         Me.GroupBox1.Controls.Add(Me.chkBoxScreenShot)
         Me.GroupBox1.Controls.Add(Me.trkBarRange)
         Me.GroupBox1.Controls.Add(Me.chkBoxOnTop)
@@ -719,6 +721,16 @@ Partial Class formGeTAC
         Me.txtBoxScreenShotDir.Size = New System.Drawing.Size(100, 23)
         Me.txtBoxScreenShotDir.Text = "C://"
         '
+        'chkBoxGridOn
+        '
+        Me.chkBoxGridOn.AutoSize = True
+        Me.chkBoxGridOn.Location = New System.Drawing.Point(476, 42)
+        Me.chkBoxGridOn.Name = "chkBoxGridOn"
+        Me.chkBoxGridOn.Size = New System.Drawing.Size(62, 17)
+        Me.chkBoxGridOn.TabIndex = 30
+        Me.chkBoxGridOn.Text = "Grid On"
+        Me.chkBoxGridOn.UseVisualStyleBackColor = True
+        '
         'txtBxColorPointsCheck
         '
         Me.txtBxColorPointsCheck.BackColor = System.Drawing.Color.Lime
@@ -899,5 +911,6 @@ Partial Class formGeTAC
     Friend WithEvents chkBoxScreenShot As System.Windows.Forms.CheckBox
     Friend WithEvents SCREENSHOTDIRToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtBoxScreenShotDir As System.Windows.Forms.ToolStripTextBox
+    Friend WithEvents chkBoxGridOn As System.Windows.Forms.CheckBox
 
 End Class

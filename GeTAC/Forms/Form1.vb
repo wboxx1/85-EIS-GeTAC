@@ -590,4 +590,11 @@ Public Class formGeTAC
     Private Sub txtBoxScreenShotDir_TextChanged(sender As Object, e As EventArgs) Handles txtBoxScreenShotDir.TextChanged
         mScreenShotLocation = sender.text
     End Sub
+
+    Private Sub chkBoxGridOn_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxGridOn.CheckedChanged
+        If mIsInitialized Then log.Trace("Staring sub 'chkBoxGridOn_CheckedChanged()'.")
+        If mFormValues IsNot Nothing Then mFormValues.GridOn = chkBoxGridOn.Checked
+        CreateKML()
+        If mIsInitialized Then log.Trace("Ending sub 'chkBoxGridOn_CheckedChanged()'.")
+    End Sub
 End Class

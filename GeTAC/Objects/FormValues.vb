@@ -18,6 +18,8 @@
     Public Tilt As Integer
     Public AutoRange As Boolean
     Public OnTop As Boolean
+    Public ScreenShot As Boolean
+    Public GridOn As Boolean
 
 
     Enum LATDirection
