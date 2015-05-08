@@ -465,7 +465,7 @@ Public Class formGeTAC
                     If mScreenShotIsEnabled Then
                         If Not Directory.Exists(mScreenShotLocation) Then Directory.CreateDirectory(mScreenShotLocation)
                         graph.CopyFromScreen(0, 0, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy)
-                        screenshot.Save(mScreenShotLocation + CStr(i * j) + ".jpeg", Imaging.ImageFormat.Jpeg)
+                        screenshot.Save(mScreenShotLocation + CStr(progress) + ".jpeg", Imaging.ImageFormat.Jpeg)
                     End If
                 Next
             Else
@@ -482,7 +482,7 @@ Public Class formGeTAC
                     If mScreenShotIsEnabled Then
                         If Not Directory.Exists(mScreenShotLocation) Then Directory.CreateDirectory(mScreenShotLocation)
                         graph.CopyFromScreen(0, 0, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy)
-                        screenshot.Save(mScreenShotLocation + CStr(i * j) + ".jpeg", Imaging.ImageFormat.Jpeg)
+                        screenshot.Save(mScreenShotLocation + CStr(progress) + ".jpeg", Imaging.ImageFormat.Jpeg)
                     End If
                 Next
             End If
@@ -596,5 +596,14 @@ Public Class formGeTAC
         If mFormValues IsNot Nothing Then mFormValues.GridOn = chkBoxGridOn.Checked
         CreateKML()
         If mIsInitialized Then log.Trace("Ending sub 'chkBoxGridOn_CheckedChanged()'.")
+    End Sub
+
+    Private Sub btnPreviewKML_Click(sender As Object, e As EventArgs) Handles btnPreviewKML.Click
+        If mIsInitialized Then log.Trace("Starting sub 'btnPreviewKML_Click()'.")
+        If mFormValues IsNot Nothing Then
+            PreviewKML(mFormValues, LatitudePoints, LongitudePoints)
+            OpenKML(mKMLPath)
+        End If
+        If mIsInitialized Then log.Trace("Ending sub 'btnPreviewKML_Click()'.")
     End Sub
 End Class

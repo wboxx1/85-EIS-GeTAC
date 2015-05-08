@@ -95,6 +95,7 @@ Partial Class formGeTAC
         Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
+        Me.btnPreviewKML = New System.Windows.Forms.Button()
         Me.grpBxStartPoint.SuspendLayout()
         CType(Me.upDwnMinLon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.upDwnMinLat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -484,6 +485,7 @@ Partial Class formGeTAC
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.btnPreviewKML)
         Me.GroupBox1.Controls.Add(Me.chkBoxGridOn)
         Me.GroupBox1.Controls.Add(Me.chkBoxScreenShot)
         Me.GroupBox1.Controls.Add(Me.trkBarRange)
@@ -503,7 +505,7 @@ Partial Class formGeTAC
         Me.GroupBox1.Controls.Add(Me.Label33)
         Me.GroupBox1.Location = New System.Drawing.Point(12, 282)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(547, 143)
+        Me.GroupBox1.Size = New System.Drawing.Size(547, 162)
         Me.GroupBox1.TabIndex = 23
         Me.GroupBox1.TabStop = False
         '
@@ -799,6 +801,15 @@ Partial Class formGeTAC
         Me.txtBxLabelLat.Text = "N"
         Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
+        'btnPreviewKML
+        '
+        Me.btnPreviewKML.Location = New System.Drawing.Point(354, 125)
+        Me.btnPreviewKML.Name = "btnPreviewKML"
+        Me.btnPreviewKML.Size = New System.Drawing.Size(183, 25)
+        Me.btnPreviewKML.TabIndex = 31
+        Me.btnPreviewKML.Text = "Preview KML"
+        Me.btnPreviewKML.UseVisualStyleBackColor = True
+        '
         'formGeTAC
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -912,5 +923,6 @@ Partial Class formGeTAC
     Friend WithEvents SCREENSHOTDIRToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents txtBoxScreenShotDir As System.Windows.Forms.ToolStripTextBox
     Friend WithEvents chkBoxGridOn As System.Windows.Forms.CheckBox
+    Friend WithEvents btnPreviewKML As System.Windows.Forms.Button
 
 End Class
