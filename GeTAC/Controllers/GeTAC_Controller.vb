@@ -289,12 +289,19 @@ Public Class GeTAC_Controller
             
 
 
-            
+            lookAt.Heading = formValues.Heading
+            lookAt.Latitude = DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                              DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection)
+            lookAt.Longitude = DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection)
+            lookAt.Range = LinearToLog.ConvertLinearToLog(formValues.Range)
+            lookAt.Tilt = formValues.Tilt
 
 
 
 
             folder.Name = "GeTAC"
+            folder.Viewpoint = lookAt
             For Each pMark In placemarks
                 folder.AddFeature(pMark)
             Next
