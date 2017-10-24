@@ -77,6 +77,7 @@ Public Class GeTAC_Controller
             mainForm.lblDwell.Text = mainForm.trkBarDwell.Value / 10 & " Sec"
             mainForm.chkBoxAutoRange.Checked = If(values.AutoRange = Nothing, False, values.AutoRange)
             mainForm.chkBoxOnTop.Checked = If(values.OnTop = Nothing, True, values.OnTop)
+            mainForm.chkBoxGridOn.Checked = If(values.GridOn = Nothing, True, values.GridOn)
         Catch ex As Exception
             log.Error("Error in sub 'FillmainForm()': " & ex.Message)
             MsgBox("Error in sub 'FillMainForm()': " & ex.Message, MsgBoxStyle.MsgBoxSetForeground)
@@ -163,6 +164,174 @@ Public Class GeTAC_Controller
         End Try
     End Sub
 
+    Shared Sub PreviewKML(ByVal formValues As FormValues, ByVal latPoints As Integer, ByVal lonPoints As Integer)
+        Dim kml As Kml
+        Dim folder As Folder
+        Dim placemark1 As Placemark
+        Dim placemark2 As Placemark
+        Dim linestring1 As LineString
+        Dim linestring2 As LineString
+        Dim point As Point
+        Dim style1 As Style
+        Dim style2 As Style
+        Dim style3 As Style
+        Dim coordinateCollection1 As CoordinateCollection
+        Dim coordinateCollection2 As CoordinateCollection
+        Dim point1 As Point
+        Dim point2 As Point
+        Dim point3 As Point
+        Dim point4 As Point
+        Dim lookAt As LookAt
+        Dim placemarks As List(Of Placemark)
+        Dim ccs As List(Of CoordinateCollection)
+        Dim lineStrings As List(Of LineString)
+        Dim styles As List(Of Style)
+        Dim index As Integer
+
+        kml = New Kml()
+        folder = New Folder()
+        point = New Point()
+        placemark1 = New Placemark()
+        placemark2 = New Placemark()
+        linestring1 = New LineString()
+        linestring2 = New LineString()
+        style1 = New Style()
+        style2 = New Style()
+        style3 = New Style()
+        point1 = New Point()
+        point2 = New Point()
+        point3 = New Point()
+        point4 = New Point()
+        lookAt = New LookAt()
+        placemarks = New List(Of Placemark)
+        ccs = New List(Of CoordinateCollection)
+        lineStrings = New List(Of LineString)
+        styles = New List(Of Style)
+        index = 2
+
+        Try
+            coordinateCollection1 = New CoordinateCollection()
+            point1.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection), _
+                                           DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection), 0)
+            point2.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection), _
+                                           DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                           DecimalCoordinate(formValues.ScanAreaLonDegree, formValues.ScanAreaLonMinute, formValues.ScanAreaLonDirection), 0)
+            point3.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                                           DecimalCoordinate(formValues.ScanAreaLatDegree, formValues.ScanAreaLatMinute, formValues.ScanAreaLatDirection), _
+                                           DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                           DecimalCoordinate(formValues.ScanAreaLonDegree, formValues.ScanAreaLonMinute, formValues.ScanAreaLonDirection), 0)
+            point4.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                                           DecimalCoordinate(formValues.ScanAreaLatDegree, formValues.ScanAreaLatMinute, formValues.ScanAreaLatDirection), _
+                                           DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection), 0)
+            
+            coordinateCollection1.Add(point1.Coordinate)
+            coordinateCollection1.Add(point2.Coordinate)
+            coordinateCollection1.Add(point3.Coordinate)
+            coordinateCollection1.Add(point4.Coordinate)
+            coordinateCollection1.Add(point1.Coordinate)
+            linestring1.Coordinates = coordinateCollection1
+            linestring1.AltitudeMode = AltitudeMode.ClampToGround
+            linestring1.Tessellate = True
+            style1.Line = New LineStyle
+            If formValues.GridOn Then
+                style1.Line.Color = New Color32(255, 0, 255, 255)
+            Else
+                style1.Line.Color = New Color32(0, 0, 255, 255)
+            End If
+            style1.Line.Width = 3
+            placemark1.AddStyle(style1)
+            placemark1.Geometry = linestring1
+            placemarks.Add(placemark1)
+
+            For i = 0 To latPoints - 1
+                For j = 0 To lonPoints - 1
+                    ccs.Add(New CoordinateCollection)
+                    point1.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute + formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                                   i * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                                   DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute - formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                                   j * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+                    point2.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute + formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                                   i * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                                   DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute + formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                                   j * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+                    point3.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute - formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                                   i * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                                   DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute + formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                                   j * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+                    point4.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute - formValues.ScanStep / 4, formValues.StartPointLatDirection) + _
+                                                   i * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection), _
+                                                   DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute - formValues.ScanStep / 4, formValues.StartPointLonDirection) + _
+                                                   j * DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection), 0)
+                    ccs(ccs.Count - 1).Add(point1.Coordinate)
+                    ccs(ccs.Count - 1).Add(point2.Coordinate)
+                    ccs(ccs.Count - 1).Add(point3.Coordinate)
+                    ccs(ccs.Count - 1).Add(point4.Coordinate)
+                    ccs(ccs.Count - 1).Add(point1.Coordinate)
+                    lineStrings.Add(New LineString)
+                    lineStrings(lineStrings.Count - 1).Coordinates = ccs(ccs.Count - 1)
+                    lineStrings(lineStrings.Count - 1).AltitudeMode = AltitudeMode.ClampToGround
+                    lineStrings(lineStrings.Count - 1).Tessellate = True
+                    styles.Add(New Style)
+                    styles(styles.Count - 1).Line = New LineStyle
+                    If formValues.GridOn Then
+                        styles(styles.Count - 1).Line.Color = New Color32(255, 0, 255, 0)
+                    Else
+                        styles(styles.Count - 1).Line.Color = New Color32(0, 0, 255, 0)
+                    End If
+                    styles(styles.Count - 1).Line.Width = 3
+                    placemarks.Add(New Placemark)
+                    placemarks(placemarks.Count - 1).AddStyle(styles(styles.Count - 1))
+
+                    placemarks(placemarks.Count - 1).Geometry = lineStrings(lineStrings.Count - 1)
+
+                Next
+            Next
+            
+
+
+            lookAt.Heading = formValues.Heading
+            lookAt.Latitude = DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _
+                              DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLatDirection)
+            lookAt.Longitude = DecimalCoordinate(formValues.StartPointLonDegree, formValues.StartPointLonMinute, formValues.StartPointLonDirection) + _
+                                DecimalCoordinate(0, formValues.ScanStep / 2, formValues.ScanAreaLonDirection)
+            lookAt.Range = LinearToLog.ConvertLinearToLog(formValues.Range)
+            lookAt.Tilt = formValues.Tilt
+
+
+
+
+            folder.Name = "GeTAC"
+            folder.Viewpoint = lookAt
+            For Each pMark In placemarks
+                folder.AddFeature(pMark)
+            Next
+
+
+            kml.Feature = folder
+
+            Dim serializer As SharpKml.Base.Serializer
+            serializer = New SharpKml.Base.Serializer()
+            serializer.Serialize(kml)
+
+            Dim appData As String = GetFolderPath(SpecialFolder.ApplicationData)
+            If Not Directory.Exists(appData & "\GeTAC") Then Directory.CreateDirectory(appData & "\GeTAC")
+
+            Dim writer As StreamWriter = New StreamWriter(appData & "\GeTAC\LinkKML.kml")
+
+            Try
+                writer.Write(serializer.Xml)
+            Catch ex As Exception
+                log.Error("Error in sub 'PreviewKML()': " & ex.Message)
+                MsgBox("Error in sub 'PreviewKML()': " & ex.Message, MsgBoxStyle.MsgBoxSetForeground)
+            Finally
+                writer.Close()
+            End Try
+
+        Catch ex As Exception
+            log.Error("Error in sub 'PreviewKML()': " & ex.Message)
+            MsgBox("Error in sub 'PreviewKML()': " & ex.Message, MsgBoxStyle.MsgBoxSetForeground)
+        End Try
+    End Sub
     Shared Sub BuildKML(ByVal formValues As FormValues, Optional latitudeMultiplier As Integer = 0, Optional longitudeMultiplier As Integer = 0)
         Dim kml As Kml
         Dim folder As Folder
@@ -223,7 +392,11 @@ Public Class GeTAC_Controller
             linestring1.AltitudeMode = AltitudeMode.ClampToGround
             linestring1.Tessellate = True
             style1.Line = New LineStyle
-            style1.Line.Color = New Color32(255, 0, 255, 255)
+            If formValues.GridOn Then
+                style1.Line.Color = New Color32(255, 0, 255, 255)
+            Else
+                style1.Line.Color = New Color32(0, 0, 255, 255)
+            End If
             style1.Line.Width = 3
             placemark1.AddStyle(style1)
             placemark1.Geometry = linestring1
@@ -254,10 +427,15 @@ Public Class GeTAC_Controller
             linestring2.AltitudeMode = AltitudeMode.ClampToGround
             linestring2.Tessellate = True
             style2.Line = New LineStyle
-            style2.Line.Color = New Color32(255, 0, 255, 0)
+            If formValues.GridOn Then
+                style2.Line.Color = New Color32(255, 0, 255, 0)
+            Else
+                style2.Line.Color = New Color32(0, 0, 255, 0)
+            End If
             style2.Line.Width = 3
             placemark2.AddStyle(style2)
             placemark2.Geometry = linestring2
+
 
 
             point.Coordinate = New Vector(DecimalCoordinate(formValues.StartPointLatDegree, formValues.StartPointLatMinute, formValues.StartPointLatDirection) + _

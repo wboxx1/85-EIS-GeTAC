@@ -26,6 +26,8 @@ Public Class formGeTAC
     Private mIsInitialized As Boolean
     Private mIsCancelled As Boolean
     Private mAlarmTime As Date
+    Private mScreenShotIsEnabled As Boolean
+    Private mScreenShotLocation As String
 
     Public LatitudePoints As Integer
     Public LongitudePoints As Integer
@@ -177,6 +179,8 @@ Public Class formGeTAC
         mIsInitialized = False
         mIsCancelled = False
         PointsWarning = False
+        mScreenShotIsEnabled = False
+        mScreenShotLocation = txtBoxScreenShotDir.Text
         If mIsInitialized Then log.Trace("Ending sub 'LocalVariableInstanciate()'.")
     End Sub
 
@@ -439,6 +443,12 @@ Public Class formGeTAC
         If mIsInitialized Then log.Trace("Starting sub 'bckGrndMoveWindow_DoWork()'.")
         Dim progress As Double = 0
         Dim remainder As Double = 0
+        Dim bounds As Rectangle
+        Dim screenshot As System.Drawing.Bitmap
+        Dim graph As Graphics
+        bounds = Screen.PrimaryScreen.Bounds
+        screenshot = New System.Drawing.Bitmap(bounds.Width, bounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppRgb)
+        graph = Graphics.FromImage(screenshot)
         For i = 0 To LatitudePoints - 1
             remainder = i / 2 - Math.Floor(i / 2)
             If remainder = 0 Then
@@ -452,6 +462,11 @@ Public Class formGeTAC
                     progress += 1
                     bckGrndMoveWindow.ReportProgress(progress)
                     Threading.Thread.Sleep(mFormValues.Dwell * 100)
+                    If mScreenShotIsEnabled Then
+                        If Not Directory.Exists(mScreenShotLocation) Then Directory.CreateDirectory(mScreenShotLocation)
+                        graph.CopyFromScreen(0, 0, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy)
+                        screenshot.Save(mScreenShotLocation + CStr(progress) + ".jpeg", Imaging.ImageFormat.Jpeg)
+                    End If
                 Next
             Else
                 For j = LongitudePoints - 1 To 0 Step -1
@@ -464,6 +479,11 @@ Public Class formGeTAC
                     progress += 1
                     bckGrndMoveWindow.ReportProgress(progress)
                     Threading.Thread.Sleep(mFormValues.Dwell * 100)
+                    If mScreenShotIsEnabled Then
+                        If Not Directory.Exists(mScreenShotLocation) Then Directory.CreateDirectory(mScreenShotLocation)
+                        graph.CopyFromScreen(0, 0, 0, 0, bounds.Size, CopyPixelOperation.SourceCopy)
+                        screenshot.Save(mScreenShotLocation + CStr(progress) + ".jpeg", Imaging.ImageFormat.Jpeg)
+                    End If
                 Next
             End If
 
@@ -557,5 +577,33 @@ Public Class formGeTAC
         cachePath = getCacheLocation()
 
         SaveCache(cachePath, destinationPath, Me)
+    End Sub
+
+    Private Sub chkBoxScreenShot_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxScreenShot.CheckedChanged
+        If sender.checked = True Then
+            mScreenShotIsEnabled = True
+        Else
+            mScreenShotIsEnabled = False
+        End If
+    End Sub
+
+    Private Sub txtBoxScreenShotDir_TextChanged(sender As Object, e As EventArgs) Handles txtBoxScreenShotDir.TextChanged
+        mScreenShotLocation = sender.text
+    End Sub
+
+    Private Sub chkBoxGridOn_CheckedChanged(sender As Object, e As EventArgs) Handles chkBoxGridOn.CheckedChanged
+        If mIsInitialized Then log.Trace("Staring sub 'chkBoxGridOn_CheckedChanged()'.")
+        If mFormValues IsNot Nothing Then mFormValues.GridOn = chkBoxGridOn.Checked
+        CreateKML()
+        If mIsInitialized Then log.Trace("Ending sub 'chkBoxGridOn_CheckedChanged()'.")
+    End Sub
+
+    Private Sub btnPreviewKML_Click(sender As Object, e As EventArgs) Handles btnPreviewKML.Click
+        If mIsInitialized Then log.Trace("Starting sub 'btnPreviewKML_Click()'.")
+        If mFormValues IsNot Nothing Then
+            PreviewKML(mFormValues, LatitudePoints, LongitudePoints)
+            OpenKML(mKMLPath)
+        End If
+        If mIsInitialized Then log.Trace("Ending sub 'btnPreviewKML_Click()'.")
     End Sub
 End Class

@@ -86,11 +86,16 @@ Partial Class formGeTAC
         Me.HELPToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.HOWTOToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ABOUTToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.chkBoxScreenShot = New System.Windows.Forms.CheckBox()
+        Me.SCREENSHOTDIRToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtBoxScreenShotDir = New System.Windows.Forms.ToolStripTextBox()
+        Me.chkBoxGridOn = New System.Windows.Forms.CheckBox()
         Me.txtBxColorPointsCheck = New GeTAC.TextBoxColor()
         Me.txtBoxLabelLonScanArea = New GeTAC.TextBoxLabel()
         Me.txtBoxLabelLatScanArea = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLon = New GeTAC.TextBoxLabel()
         Me.txtBxLabelLat = New GeTAC.TextBoxLabel()
+        Me.btnPreviewKML = New System.Windows.Forms.Button()
         Me.grpBxStartPoint.SuspendLayout()
         CType(Me.upDwnMinLon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.upDwnMinLat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -480,6 +485,9 @@ Partial Class formGeTAC
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.btnPreviewKML)
+        Me.GroupBox1.Controls.Add(Me.chkBoxGridOn)
+        Me.GroupBox1.Controls.Add(Me.chkBoxScreenShot)
         Me.GroupBox1.Controls.Add(Me.trkBarRange)
         Me.GroupBox1.Controls.Add(Me.chkBoxOnTop)
         Me.GroupBox1.Controls.Add(Me.chkBoxAutoRange)
@@ -497,7 +505,7 @@ Partial Class formGeTAC
         Me.GroupBox1.Controls.Add(Me.Label33)
         Me.GroupBox1.Location = New System.Drawing.Point(12, 282)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(547, 143)
+        Me.GroupBox1.Size = New System.Drawing.Size(547, 162)
         Me.GroupBox1.TabIndex = 23
         Me.GroupBox1.TabStop = False
         '
@@ -662,7 +670,7 @@ Partial Class formGeTAC
         '
         'FILEToolStripMenuItem
         '
-        Me.FILEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SAVECACHEToolStripMenuItem})
+        Me.FILEToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SAVECACHEToolStripMenuItem, Me.SCREENSHOTDIRToolStripMenuItem})
         Me.FILEToolStripMenuItem.Name = "FILEToolStripMenuItem"
         Me.FILEToolStripMenuItem.Size = New System.Drawing.Size(40, 20)
         Me.FILEToolStripMenuItem.Text = "FILE"
@@ -670,7 +678,7 @@ Partial Class formGeTAC
         'SAVECACHEToolStripMenuItem
         '
         Me.SAVECACHEToolStripMenuItem.Name = "SAVECACHEToolStripMenuItem"
-        Me.SAVECACHEToolStripMenuItem.Size = New System.Drawing.Size(143, 22)
+        Me.SAVECACHEToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
         Me.SAVECACHEToolStripMenuItem.Text = "SAVE CACHE"
         '
         'HELPToolStripMenuItem
@@ -691,6 +699,39 @@ Partial Class formGeTAC
         Me.ABOUTToolStripMenuItem.Name = "ABOUTToolStripMenuItem"
         Me.ABOUTToolStripMenuItem.Size = New System.Drawing.Size(122, 22)
         Me.ABOUTToolStripMenuItem.Text = "ABOUT"
+        '
+        'chkBoxScreenShot
+        '
+        Me.chkBoxScreenShot.AutoSize = True
+        Me.chkBoxScreenShot.Location = New System.Drawing.Point(355, 42)
+        Me.chkBoxScreenShot.Name = "chkBoxScreenShot"
+        Me.chkBoxScreenShot.Size = New System.Drawing.Size(85, 17)
+        Me.chkBoxScreenShot.TabIndex = 29
+        Me.chkBoxScreenShot.Text = "Screen Shot"
+        Me.chkBoxScreenShot.UseVisualStyleBackColor = True
+        '
+        'SCREENSHOTDIRToolStripMenuItem
+        '
+        Me.SCREENSHOTDIRToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.txtBoxScreenShotDir})
+        Me.SCREENSHOTDIRToolStripMenuItem.Name = "SCREENSHOTDIRToolStripMenuItem"
+        Me.SCREENSHOTDIRToolStripMenuItem.Size = New System.Drawing.Size(171, 22)
+        Me.SCREENSHOTDIRToolStripMenuItem.Text = "SCREEN SHOT DIR"
+        '
+        'txtBoxScreenShotDir
+        '
+        Me.txtBoxScreenShotDir.Name = "txtBoxScreenShotDir"
+        Me.txtBoxScreenShotDir.Size = New System.Drawing.Size(100, 23)
+        Me.txtBoxScreenShotDir.Text = "C://"
+        '
+        'chkBoxGridOn
+        '
+        Me.chkBoxGridOn.AutoSize = True
+        Me.chkBoxGridOn.Location = New System.Drawing.Point(476, 42)
+        Me.chkBoxGridOn.Name = "chkBoxGridOn"
+        Me.chkBoxGridOn.Size = New System.Drawing.Size(62, 17)
+        Me.chkBoxGridOn.TabIndex = 30
+        Me.chkBoxGridOn.Text = "Grid On"
+        Me.chkBoxGridOn.UseVisualStyleBackColor = True
         '
         'txtBxColorPointsCheck
         '
@@ -759,6 +800,15 @@ Partial Class formGeTAC
         Me.txtBxLabelLat.TabStop = False
         Me.txtBxLabelLat.Text = "N"
         Me.txtBxLabelLat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'btnPreviewKML
+        '
+        Me.btnPreviewKML.Location = New System.Drawing.Point(354, 125)
+        Me.btnPreviewKML.Name = "btnPreviewKML"
+        Me.btnPreviewKML.Size = New System.Drawing.Size(183, 25)
+        Me.btnPreviewKML.TabIndex = 31
+        Me.btnPreviewKML.Text = "Preview KML"
+        Me.btnPreviewKML.UseVisualStyleBackColor = True
         '
         'formGeTAC
         '
@@ -869,5 +919,10 @@ Partial Class formGeTAC
     Friend WithEvents HELPToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents HOWTOToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ABOUTToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents chkBoxScreenShot As System.Windows.Forms.CheckBox
+    Friend WithEvents SCREENSHOTDIRToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents txtBoxScreenShotDir As System.Windows.Forms.ToolStripTextBox
+    Friend WithEvents chkBoxGridOn As System.Windows.Forms.CheckBox
+    Friend WithEvents btnPreviewKML As System.Windows.Forms.Button
 
 End Class
