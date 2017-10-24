@@ -86,7 +86,7 @@ Public Class GeTAC_Controller
 
     Shared Function GoogleEarthIsInstalled() As Boolean
         Try
-            If Registry.CurrentUser.OpenSubKey("Software\Google\Google Earth Plus") Is Nothing Then
+            If Registry.CurrentUser.OpenSubKey("Software\Google\Google Earth Plus") Is Nothing And Registry.CurrentUser.OpenSubKey("Software\Google\Google Earth Pro") Is Nothing Then
                 ' Key doesn't exist
                 Return False
             Else
@@ -102,7 +102,7 @@ Public Class GeTAC_Controller
 
     Shared Function getCacheLocation() As String
         Try
-            Dim key = Registry.CurrentUser.OpenSubKey("Software\Google\Google Earth Plus")
+            Dim key = Registry.CurrentUser.OpenSubKey("Software\Google\Google Earth Pro")
             Dim path = key.GetValue("CachePath") & "\unified_cache_leveldb_leveldb2"
             Return path
         Catch ex As Exception
